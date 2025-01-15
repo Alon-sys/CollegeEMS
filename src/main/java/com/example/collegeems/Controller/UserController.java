@@ -1,4 +1,4 @@
-package com.example.collegeems;
+package com.example.collegeems.Controller;
 
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
