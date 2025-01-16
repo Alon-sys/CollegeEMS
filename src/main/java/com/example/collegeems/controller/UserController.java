@@ -1,4 +1,4 @@
-package com.example.collegeems.Controller;
+package com.example.collegeems.controller;
 
 
 
