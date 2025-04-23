@@ -33,7 +33,7 @@ public class Job {
     }
 
     /**
-     * 实体更新前的回调方法，在更新用户记录时自动设置更新时间为当前时间。
+     * 实体更新前的回调方法，在更新用户记录时自动设置更新时间为当前时间
      */
     @PreUpdate
     protected void onUpdate() {
