@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.AdminDao">
+
+    <!-- 获取用户ID -->
+    <select id="selectUserById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.User">
+        SELECT * FROM users
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 插入用户 -->
+    <insert id="insertUser" parameterType="com.example.collegeems.entity.User">
+        INSERT INTO users (username, password, email, role, created_at, updated_at, phone_number, real_name)
+        VALUES (#{username}, #{password}, #{email}, #{role}, #{createdAt}, #{updatedAt}, #{phoneNumber}, #{realName})
+    </insert>
+
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="com.example.collegeems.entity.User">
+        UPDATE users
+        SET username = #{username},
+            password = #{password},
+            email = #{email},
+            role = #{role},
+            updated_at = #{updatedAt},
+            phone_number = #{phoneNumber},
+            real_name = #{realName}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据 ID 删除用户 -->
+    <delete id="deleteUserById" parameterType="java.lang.Long">
+        DELETE FROM users
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 根据搜索条件查询用户 -->
+    <select id="findBySearch" resultType="com.example.collegeems.entity.User">
+        SELECT *
+        FROM users
+        <where>
+            role != 'ROLE_ADMIN'
+            <if test="Params != null">
+                <if test="Params.username != null and Params.username != ''">
+                    and username like concat('%', #{Params.username}, '%')
+                </if>
+                <if test="Params.email != null and Params.email != ''">
+                    and email like concat('%', #{Params.email}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="findByName" resultType="com.example.collegeems.entity.User">
+        SELECT * FROM users
+        WHERE username = #{username}
+    </select>
+
+    <!-- 根据用户名和密码查询用户 -->
+    <select id="findByNameAndByPassword" resultType="com.example.collegeems.entity.User">
+        SELECT * FROM users
+        WHERE username = #{username}
+        AND password = #{password}
+    </select>
+</mapper>

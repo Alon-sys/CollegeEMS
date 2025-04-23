@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.ApplicationDao">
+
+    <!--查询所有-->
+    <select id="findAll" resultType="com.example.collegeems.entity.Application">
+        SELECT * FROM applications
+    </select>
+
+    <!--保存-->
+    <insert id="save" parameterType="com.example.collegeems.entity.Application">
+        INSERT INTO applications (user_id, job_id, resume_id, status, applied_at, updated_at)
+        VALUES (#{userId}, #{jobId}, #{resumeId}, #{status}, #{appliedAt}, #{updatedAt})
+    </insert>
+
+
+</mapper>

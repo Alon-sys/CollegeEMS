@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="c59a40ca-6334-4685-b9e7-f690a9e6e8a5" name="collegeems@localhost Mapping">
+      <data-sources db="57eeb4f9-a0f3-4067-a85b-7b0aa160d8a9" />
+    </mapping>
+    <mapping uuid="4d91b7a4-b8d0-42fa-8435-45cfc522b751" name="collegeems@localhost Mapping [2]">
+      <data-sources db="e231892e-1c5b-4675-b742-048d8f415907" />
+      <scope>
+        <node kind="schema" qname="collegeems" />
+      </scope>
+    </mapping>
+  </component>
+</project>

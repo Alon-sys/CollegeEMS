@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.ResumeDao">
+
+    <!-- 查询所有简历 -->
+    <select id="findAll" resultType="com.example.collegeems.entity.Resume">
+        SELECT * FROM resumes
+    </select>
+
+    <!-- 根据ID查询简历 -->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Resume">
+        SELECT * FROM resumes
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入简历 -->
+    <insert id="save" parameterType="com.example.collegeems.entity.Resume">
+        INSERT INTO resumes (user_id, job_id, resume_url, created_at, updated_at)
+        VALUES (#{userId}, #{jobId}, #{resumeUrl}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <!-- 更新简历 -->
+    <update id="update" parameterType="com.example.collegeems.entity.Resume">
+        UPDATE resumes
+        SET user_id = #{userId}, job_id = #{jobId}, resume_url = #{resumeUrl}, created_at = #{createdAt}, updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除简历 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM resumes
+        WHERE id = #{id}
+    </delete>
+
+
+
+</mapper>

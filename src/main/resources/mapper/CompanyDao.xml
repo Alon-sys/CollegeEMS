@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.CompanyDao">
+
+
+    <!-- 根据id查询公司 -->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Company">
+        SELECT * FROM companies
+        WHERE id = #{id}
+    </select>
+
+    <!-- 新增公司 -->
+    <insert id="save" parameterType="com.example.collegeems.entity.Company">
+        INSERT INTO companies (name,user_id, logo, website, description, industry, size)
+        VALUES (#{name}, #{logo},#{userID}, #{website}, #{description}, #{industry}, #{size})
+    </insert>
+
+    <!-- 更新公司信息 -->
+    <update id="update" parameterType="com.example.collegeems.entity.Company">
+        UPDATE companies
+        SET name = #{name}, logo = #{logo}, website = #{website}, description = #{description}, industry = #{industry}, size = #{size}
+        WHERE id = #{id}
+    </update>
+    <!-- 删除公司 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM companies
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 查询所有公司 -->
+    <select id="findAll" resultType="com.example.collegeems.entity.Company">
+        SELECT * FROM companies
+    </select>
+
+
+
+    <!-- 根据搜索条件查询用户 -->
+    <select id="findBySearch" resultType="com.example.collegeems.entity.Company">
+        SELECT *
+        FROM companies
+        <where>
+            <if test="Params != null">
+                <if test="Params.name != null and Params.name != ''">
+                    and name like concat('%', #{Params.name}, '%')
+                </if>
+                <if test="Params.industry != null and Params.industry != ''">
+                    and industry like concat('%', #{Params.industry}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+
+
+
+</mapper>

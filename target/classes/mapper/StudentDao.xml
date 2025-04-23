@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.StudentDao">
+
+
+
+    <!--新增-->
+    <insert id="save" parameterType="com.example.collegeems.entity.Student">
+        INSERT INTO students (user_id, student_id, name, age, gender, college, major, class_info, is_employed)
+        VALUES (#{userID}, #{studentID}, #{name}, #{age}, #{gender}, #{college}, #{major}, #{classInfo}, #{isEmployed})
+    </insert>
+
+    <!--删除-->
+    <delete id= "delete">
+        DELETE FROM students
+        WHERE id = #{id}
+    </delete>
+
+    <!--更新-->
+    <update id="update" parameterType="com.example.collegeems.entity.Student">
+        UPDATE students
+        SET user_id = #{userID}, student_id = #{studentID}, name = #{name}, age = #{age}, gender = #{gender}, college = #{college}, major = #{major}, class_info = #{classInfo}, is_employed = #{isEmployed}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询 -->
+    <select id="findBySearch" parameterType="com.example.collegeems.entity.Params" resultType="com.example.collegeems.entity.Student">
+        SELECT *
+        FROM students
+        <where>
+            <if test="Params != null">
+                <if test="Params.studentID != null and Params.studentID != ''">
+                    and student_id like concat('%', #{Params.studentID}, '%')
+                </if>
+                <if test="Params.name != null and Params.name != ''">
+                    and name like concat('%', #{Params.name}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.JobDao">
+    <resultMap id="jobMap" type="Job">
+    </resultMap>
+    <select id="findById" parameterType="java.lang.Long" resultMap="jobMap">
+        SELECT * FROM jobs
+        WHERE id = #{id}
+    </select>
+
+    <!--按条件查询-->
+    <select id="findBySearch" parameterType="com.example.collegeems.entity.Params" resultMap="jobMap">
+        SELECT *
+        FROM jobs
+        <where>
+            <if test="Params != null">
+                <if test="Params.title != null and Params.title != ''">
+                    and title like concat('%', #{Params.title}, '%')
+                </if>
+                <if test="Params.location != null and Params.location != ''">
+                    and location like concat('%', #{Params.location}, '%')
+                </if>
+                <if test="Params.category != null and Params.category != ''">
+                    and category like concat('%', #{Params.category}, '%')
+                </if>
+                <if test="Params.type != null and Params.type != ''">
+                    and type like concat('%', #{Params.type}, '%')
+                </if>
+
+            </if>
+        </where>
+    </select>
+
+    <!--新增-->
+    <insert id="save" parameterType="com.example.collegeems.entity.Job">
+        INSERT INTO jobs (company_id, title, salary, description, created_at, updated_at, location, category, type, is_active)
+        VALUES (#{companyId}, #{title}, #{salary}, #{description}, #{createdAt}, #{updatedAt}, #{location}, #{category}, #{type}, #{isActive})
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.example.collegeems.entity.Job">
+        UPDATE jobs
+        SET company_id = #{companyId}, title = #{title}, salary = #{salary}, description = #{description}, created_at = #{createdAt}, updated_at = #{updatedAt}, location = #{location}, category = #{category}, type = #{type}, is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM jobs
+        WHERE id = #{id}
+    </delete>
+
+
+</mapper>
