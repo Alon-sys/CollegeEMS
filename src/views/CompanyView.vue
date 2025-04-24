@@ -10,7 +10,7 @@
     <div>
       <el-table :data="tableData" style="width: 100%; margin: 15px 0px">
     
-        <el-table-column label="图书封面">
+        <el-table-column label="公司logo" width="100">
          <template v-slot="scope">
          <el-image
         style="width: 70px; height: 70px; border-radius: 50%"
@@ -152,6 +152,7 @@
         this.findBySearch();
       },
   
+      // 分页
         handleSizeChange(pageSize) {
           this.params.pageSize = pageSize;
           this.findBySearch();

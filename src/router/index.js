@@ -12,7 +12,7 @@ const routes = [
       title: '首页'
     },
     children:[
-    
+   
       
     ]
   },
@@ -70,21 +70,24 @@ const routes = [
         meta:{
           title:'招聘信息界面'
         }
-      }
+      },
+    
     
     
     ]
 },
+
+{
+  path:'/personal',
+  name:'个人中心',
+  component:()=>import('../views/PersonalView.vue'),
+  meta:{
+    title:'个人中心'
+  }
+},
   
  
-  {
-    path:'/personal',
-    name:'个人中心',
-    component:()=>import('../views/PersonalView.vue'),
-    meta:{
-      title:'个人中心'
-    }
-  },
+
  
 ]
 

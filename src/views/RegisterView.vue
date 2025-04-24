@@ -15,8 +15,8 @@
         </el-form-item>
        <el-form-item>
         <template>
-  <el-radio v-model="form.role" label="公司">公司</el-radio>
-  <el-radio v-model="form.role" label="学生">学生</el-radio>
+  <el-radio v-model="form.role" label="ROLE_COMPANY">企业</el-radio>
+  <el-radio v-model="form.role" label="ROLE_STUDENT">学生</el-radio>
       </template>
        </el-form-item>
         <el-form-item>

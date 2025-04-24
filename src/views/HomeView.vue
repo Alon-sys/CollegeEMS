@@ -6,25 +6,23 @@
         <img src="@/assets/img/logo.png" alt="" style="width: 50px; height: 50px; object-fit: contain; margin-top: 0;">
         <span style="font-size: 20px; margin-left: 10px; color: aliceblue;">高校就业管理系统</span>
         <el-menu mode="horizontal" background-color="#687179" text-color="#fff" active-text-color="#ffd04b">
-       <el-menu-item @click="viewJobInfo()" style="transition: color 0.3s;">招聘信息</el-menu-item>
-          <el-menu-item v-if="user.role === 'ROLE_ADMIN'" @click="viewStatistics()" style="transition: color 0.3s;">就业统计</el-menu-item>
-          <el-menu-item @click="viewAnnouncements()" style="transition: color 0.3s;">就业公告</el-menu-item>
+       <el-menu-item @click="viewRecruit()" style="transition: color 0.3s;">招聘信息</el-menu-item>
           <el-menu-item v-if="user.role === 'ROLE_ADMIN'" @click="backgroundManagement()" style="transition: color 0.3s;">后台管理</el-menu-item>
         </el-menu>
       </div>
-      <div style="display: flex; align-items: center;">
-        <el-dropdown style="height: 60px; line-height: 60px;">
-          <span class="el-dropdown-link" style="color: aliceblue; font-size: 16px; cursor: pointer; transition: color 0.3s;">
+      <div class="header-right">
+        <el-dropdown>
+          <span class="el-dropdown-link">
             {{ user.username }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
+            <i class="el-icon-arrow-down el-icon-s-tools"></i>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
-                <div @click="goToPersonalCenter()" style="padding: 10px 20px; transition: background-color 0.3s;">个人中心</div>
+                <div @click="goToPersonalCenter()">个人中心</div>
               </el-dropdown-item>
               <el-dropdown-item>
-                <div @click="logout()" style="padding: 10px 20px; transition: background-color 0.3s;">退出登录</div>
+                <div @click="logout()">退出登录</div>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -32,6 +30,7 @@
       </div>
     </el-header>
     <!-- 主体 -->
+     <el-main style="padding: 0;">
     <div class="main-content" style="padding: 20px;">
       <el-card class="welcome-card" style="max-width: 800px; margin: 0 auto; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 4px;">
         <template #header>
@@ -74,12 +73,31 @@
         </el-list>
       </el-card>
     </div>
+  </el-main>
   </div>
 </template>
-
 <style>
 .el-menu{
   border-bottom: none !important;
+}
+
+.center-icon{
+  display: flex;
+  align-items: center;
+  
+
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.el-dropdown-link {
+  color: aliceblue;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 </style>
 
@@ -90,14 +108,8 @@ export default {
   data() {
     return {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
-      employmentCount: 500, 
-      averageSalary: '8000 元', // 示例数据
-      topIndustry: '互联网', // 示例数据
-      announcements: [
-        { title: '某企业校园招聘信息', date: '2025-04-01' },
-        { title: '就业指导讲座通知', date: '2025-03-25' },
-        { title: '就业政策解读会', date: '2025-03-10' }
-      ]
+    form:{},
+   
     };
   },
   methods: {
@@ -116,20 +128,11 @@ export default {
     },
     backgroundManagement() {
       // 跳转到后台管理页面的逻辑
-      this.$router.push("/admin");
+      this.$router.push("/manage");
     },
-    viewStatistics() {
-      // 跳转到就业统计页面的逻辑
-      this.$router.push("/statistics");
-    },
-    viewAnnouncements() {
-      // 跳转到就业公告页面的逻辑
-      this.$router.push("/announcements");
-    },
-    viewJobInfo() {
-      // 跳转到招聘信息页面的逻辑
-      this.$router.push("/job");
-    }
+    successUpload(res) {
+        this.form.logo = res.data;
+        },
   }
 };
 </script>    

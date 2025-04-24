@@ -67,7 +67,7 @@
     <el-button  @click="dialogFormVisible = false">取 消</el-button>
     <el-button  @click="submit()" type="primary">确 定</el-button>
   </div>
-</el-dialog>
+  </el-dialog>
   </div>
 </template>
 
@@ -113,11 +113,9 @@ import request from '@/utils/request';
         message: res.msg,
         type: 'error'
       });
-        }
-
-       })
-        
-      },
+        } 
+      })
+         },
       add(){
         this.form={};
         this.dialogFormVisible = true;

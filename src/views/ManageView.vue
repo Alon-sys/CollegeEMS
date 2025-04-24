@@ -8,19 +8,19 @@
         <span style="font-size: 20px; margin-left: 10px; color: aliceblue;">高校就业管理系统</span>
     
       </div>
-      <div style="display: flex; align-items: center;">
-        <el-dropdown style="height: 60px; line-height: 60px;">
-          <span class="el-dropdown-link" style="color: aliceblue; font-size: 16px; cursor: pointer; transition: color 0.3s;">
+      <div class="header-right">
+        <el-dropdown>
+          <span class="el-dropdown-link">
             {{ user.username }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
+            <i class="el-icon-arrow-down el-icon-s-tools"></i>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
-                <div @click="goToPersonalCenter()" style="padding: 10px 20px; transition: background-color 0.3s;">个人中心</div>
+                <div @click="goToPersonalCenter()">个人中心</div>
               </el-dropdown-item>
               <el-dropdown-item>
-                <div @click="logout()" style="padding: 10px 20px; transition: background-color 0.3s;">退出登录</div>
+                <div @click="logout()">退出登录</div>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -69,6 +69,18 @@
 <style>
 .el-menu{
   border-right: none !important;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.el-dropdown-link {
+  color: aliceblue;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 </style>
 
