@@ -7,6 +7,7 @@ import javax.persistence.Column;
 // 分页参数
 @Data
 public class Params {
+    private Long id;
     private String username;
     private String email;
     private Integer pageNum;

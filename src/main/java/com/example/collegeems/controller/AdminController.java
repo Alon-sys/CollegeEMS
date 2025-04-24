@@ -22,6 +22,13 @@ public class AdminController {
     private AdminService adminService;
 
 
+    //根据id查询用户
+    @GetMapping("/{id}")
+    public Result findById(@PathVariable Long id){
+        User admin = adminService.findById(id);
+        return Result.success(admin);
+    }
+
     //按条件查询
     @GetMapping("/search")
     public Result findBySearch(Params params){
