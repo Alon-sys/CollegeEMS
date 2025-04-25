@@ -71,6 +71,14 @@ const routes = [
           title:'招聘信息界面'
         }
       },
+      {
+        path:'/resume',
+        name:'简历信息界面',
+        component:()=>import('../views/ResumeView.vue'),
+        meta:{
+          title:'简历信息界面'
+        }
+      }
     
     
     

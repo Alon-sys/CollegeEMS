@@ -5,11 +5,11 @@
       <el-input v-model="params.title" style="width: 200px; margin-right: 10px" placeholder="请输入职位标题"></el-input>
       <el-input v-model="params.location" style="width: 200px; margin-right: 10px" placeholder="请输入职位地点"></el-input>
       <el-input v-model="params.category" style="width: 200px; margin-right: 10px" placeholder="请输入职位类别"></el-input>
-      <el-select v-model="form.type" placeholder="请选择" >
-            <el-option label="全职" value="全职"></el-option>
-            <el-option label="兼职" value="兼职"></el-option>
-            <el-option label="实习" value="实习"></el-option>
-          </el-select>
+      <el-select v-model="form.type" placeholder="请选择">
+        <el-option label="全职" value="全职"></el-option>
+        <el-option label="兼职" value="兼职"></el-option>
+        <el-option label="实习" value="实习"></el-option>
+      </el-select>
       <el-button type="warning" @click="findBySearch()">搜索</el-button>
       <el-button type="warning" @click="reset()">重置</el-button>
       <el-button type="primary" @click="add()">新增</el-button>
@@ -41,14 +41,9 @@
 
     <!-- 分页 -->
     <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="params.pageNum"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="params.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="params.pageNum" :page-sizes="[5, 10, 15, 20]" :page-size="params.pageSize"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
@@ -78,7 +73,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button @click="submit()" type="primary">确定</el-button>

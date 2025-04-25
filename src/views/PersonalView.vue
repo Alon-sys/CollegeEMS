@@ -18,7 +18,9 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
-                <div @click="goToPersonalCenter()">个人中心</div>
+                <div @click="goToPersonalCenter()">
+                  个人中心
+                </div>
               </el-dropdown-item>
               <el-dropdown-item>
                 <div @click="logout()">退出登录</div>
@@ -28,107 +30,128 @@
         </el-dropdown>
       </div>
     </el-header>
-    
+
     <el-page-header class="page-goBack" @back="goBack" content="个人中心">
     </el-page-header>
 
     <!-- 主体 -->
-     <!--用户信息卡片-->
+    <!--用户信息卡片-->
     <div class="user-content">
       <!-- 用户信息卡片 -->
-      <el-descriptions  class="user-info" title="账户信息" :column="3"  border>
-    <template slot="extra">
-      <el-button type="primary" size="small" @click="edit(item)" >操作</el-button>
-    </template>
-    <el-descriptions-item  >
-      <template slot="label">
-        <i class="el-icon-user"></i>
-        用户名
-      </template>
-      {{item.username }}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-mobile-phone"></i>
-        电话号码
-      </template>
-      {{item.phoneNumber}}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-message"></i>
-        邮箱
-      </template>
-      {{ item.email }}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-key"></i>
-        权限
-      </template>
-      <el-tag size="small">{{ item.role }}</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-s-custom"></i>
-        真实姓名
-      </template>
-      {{ item.realName }}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-lock"></i>
-        密码
-      </template>
-      <p>******</p>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-time"></i>
-        创建时间
-      </template>
-      {{ item.createdAt }}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <i class="el-icon-edit"></i>
-        更新时间
-      </template>
-      {{ item.updatedAt }}
-    </el-descriptions-item>
-    </el-descriptions>
+      <el-descriptions class="user-info" title="账户信息" :column="3" border>
+        <template slot="extra">
+          <el-button type="primary" size="small" @click="edit(item)">操作</el-button>
+        </template>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          {{ item.username }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-mobile-phone"></i>
+            电话号码
+          </template>
+          {{ item.phoneNumber }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-message"></i>
+            邮箱
+          </template>
+          {{ item.email }}
+        </el-descriptions-item> <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-key"></i>
+            权限
+          </template>
+          <el-tag size="small">{{ item.role }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-s-custom"></i>
+            真实姓名
+          </template>
+          {{ item.realName }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-lock"></i>
+            密码
+          </template>
+          <p>******</p>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-time"></i>
+            创建时间
+          </template>
+          {{ item.createdAt }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-edit"></i>
+            更新时间
+          </template>
+          {{ item.updatedAt }}
+        </el-descriptions-item>
+      </el-descriptions>
     </div>
 
     <!-- 学生信息卡片 -->
 
     <div class="card-content" v-if="user.role === 'ROLE_STUDENT'">
       <el-descriptions class="card-info" title="学生信息" :column="4" border direction="vertical">
-        <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-    <el-descriptions-item label="备注">
-      <el-tag size="small">学校</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-  <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-</el-descriptions>
+        <template slot="extra">
+          <el-button type="primary" size="small" @click="edit(item)">编辑</el-button>
+        </template>
+        <el-descriptions-item label="学号">{{ student.studentID }}</el-descriptions-item>
+        <el-descriptions-item label="姓名">{{ student.name }}</el-descriptions-item>
+        <el-descriptions-item label="年龄">{{ student.age }}</el-descriptions-item>
+        <el-descriptions-item label="性别">{{ student.gender }}</el-descriptions-item>
+        <el-descriptions-item label="学院">{{ student.college }}</el-descriptions-item>
+        <el-descriptions-item label="专业">{{ student.major }}</el-descriptions-item>
+        <el-descriptions-item label="班级">{{ student.classInfo }}</el-descriptions-item>
+        <el-descriptions-item label="备注">
+          <el-tag v-if="student.isEmployed == 1" type="success">已就业</el-tag>
+          <el-tag v-else type="info">未就业</el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
     </div>
-  <!--公司信息卡片-->
-  <div class="card-content" v-if="user.role === 'ROLE_COMPANY'">
+    <!--公司信息卡片-->
+    <div class="card-content" v-if="user.role === 'ROLE_COMPANY'">
       <el-descriptions class="card-info" title="企业信息" :column="4" border direction="vertical">
-        <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-    <el-descriptions-item label="备注">
-      <el-tag size="small">学校</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-  <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-</el-descriptions>
-  </div>
+        <template slot="extra">
+          <el-button type="primary" size="small" @click="edit(item)">编辑</el-button>
+        </template>
+        <el-descriptions-item label="公司logo" width="50px">
+          <template>
+            <el-image style="width: 70px; height: 70px; border-radius: 50%"
+              :src="'http://localhost:8888/api/files/' + company.logo"
+              :preview-src-list="['http://localhost:8888/api/files/' + company.logo]">
+            </el-image>
+          </template>
+        </el-descriptions-item>
+        <el-descriptions-item label="企业名称">{{ company.name }}</el-descriptions-item>
+        <el-descriptions-item label="公司官网">{{ company.website }}</el-descriptions-item>
+        <el-descriptions-item label="所属行业">
+          <el-tag size="small">{{ company.industry }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="公司规模">{{ company.size }}</el-descriptions-item>
+        <el-descriptions-item label="公司描述">{{ company.description }}</el-descriptions-item>
+      </el-descriptions>
+    </div>
     <!-- 编辑用户信息对话框 -->
-    <el-dialog title="编辑账户信息" :visible.sync="dialogFormVisible" width="40%" center>
-      <el-form  :inline="true" :model="form" label-position="top" label-width="100px" class="dialog-form">
+    <el-dialog title="编辑账户信息" 
+    :visible.sync="dialogFormVisible" 
+    width="40%" center >
+      <el-form  
+      :model="form"
+       label-position="top" 
+      label-width="100px" 
+      class="dialog-form">
         <el-form-item label="名称">
           <el-input v-model="form.username" placeholder="请输入名称" autocomplete="off"></el-input>
         </el-form-item>
@@ -139,7 +162,8 @@
           <el-input v-model="form.email" placeholder="请输入邮箱" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input type="password" show-password v-model="form.password" placeholder="请输入密码" autocomplete="off"></el-input>
+          <el-input type="password" show-password v-model="form.password" placeholder="请输入密码"
+            autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名">
           <el-input v-model="form.realName" placeholder="请输入真实姓名" autocomplete="off"></el-input>
@@ -163,11 +187,13 @@ export default {
       formLabelWidth: '120px',
       dialogFormVisible: false,
       params: {
-        
+
       },
       total: 0,
-      form:{},
+      form: {},
       item: {},
+      student: {},
+      company: {},
     };
   },
   created() {
@@ -175,13 +201,33 @@ export default {
   },
   methods: {
     findById() {
-      request.get('/admin/'+this.user.id,this.form, { params: this.params }).then(res => {
-        if (res.code === '200') { 
+      request.get('/admin/' + this.user.id, this.form, { params: this.params }).then(res => {
+        if (res.code === '200') {
           this.item = res.data;
           this.total = res.data.total;
         } else {
           this.$message({
             message: res.msg,
+            type: 'error'
+          });
+        }
+      });
+      request.get('/student/' + this.user.id, this.form, { params: this.params }).then(res1 => {
+        if (res1.code === '200') {
+          this.student = res1.data;
+        } else {
+          this.$message({
+            message: res1.msg,
+            type: 'error'
+          });
+        }
+      });
+      request.get('/company/' + this.user.id, this.form, { params: this.params }).then(res2 => {
+        if (res2.code === '200') {
+          this.company = res2.data;
+        } else {
+          this.$message({
+            message: res2.msg,
             type: 'error'
           });
         }
@@ -193,7 +239,7 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
-      },
+    },
     backgroundManagement() {
       this.$router.push('/admin');
     },
@@ -204,23 +250,23 @@ export default {
     goHome() {
       this.$router.push("/");
     },
-    submit(){
-      request.post('/admin',this.form).then(res=>{
-      if(res.code === '200'){
-      this.$message({
-          message: ('操作成功'),
-          type: 'success'
-      });
-      this.dialogFormVisible = false;
-      this.findById();
-    }
-    else{
-      this.$message({
-        message: (res.msg),
-        type: 'error'
-      });
-    }
-    })
+    submit() {
+      request.post('/admin', this.form).then(res => {
+        if (res.code === '200') {
+          this.$message({
+            message: ('操作成功'),
+            type: 'success'
+          });
+          this.dialogFormVisible = false;
+          this.findById();
+        }
+        else {
+          this.$message({
+            message: (res.msg),
+            type: 'error'
+          });
+        }
+      })
     }
   }
 };
@@ -251,7 +297,7 @@ export default {
   font-size: 20px;
   margin-left: 10px;
   color: aliceblue;
-  cursor: pointer;
+  
 }
 
 .header-right {
@@ -271,14 +317,17 @@ export default {
   padding: 20px;
   height: auto;
 }
+
 .card-content {
   margin-top: 10px;
   margin-bottom: 40px;
   padding: 20px;
   height: 50%;
 }
+
 .user-info {
-  margin-top: 20px;;
+  margin-top: 20px;
+  ;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -286,6 +335,7 @@ export default {
   width: 80%;
   margin: 0 auto;
 }
+
 .card-info {
   padding: 20px;
   background-color: #fff;
@@ -294,7 +344,7 @@ export default {
   width: 80%;
   margin: 0 auto;
   margin-top: 20px;
-  
+
 }
 
 .dialog-footer {
@@ -305,7 +355,7 @@ export default {
 .page-goBack {
   margin: 20px 20px;
   padding: 10px;
-  
+
 }
 
 .dialog-form {
