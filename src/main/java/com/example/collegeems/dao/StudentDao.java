@@ -20,5 +20,12 @@ public interface StudentDao {
     // 根据条件查询
     List<Student> findBySearch(@Param("Params") Params params);
 
+    // 根据用户id查询
+    Student findByUserID(Long id);
+
+    // 根据id查询
+    Student findById(Long id);
+
+
 
 }

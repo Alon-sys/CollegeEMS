@@ -18,5 +18,7 @@ public interface CompanyDao {
     void delete(Long id);
     // 根据条件查询
     List<Company> findBySearch(@Param("Params") Params params);
+    //根据用户iD查询数据
+    Company findByUserID(Long id);
 
 }

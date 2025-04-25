@@ -52,6 +52,12 @@
         </where>
     </select>
 
+    <!--根据用户ID查询数据-->
+    <select id="findByUserID" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Company">
+        SELECT * FROM companies
+        WHERE user_id = #{userID}
+    </select>
+
 
 
 

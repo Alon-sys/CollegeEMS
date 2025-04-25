@@ -46,5 +46,11 @@ public class CompanyService {
         return PageInfo.of(list);
     }
 
+    // 按id查询
+    public Company findByUserID(Long id)
+    {
+        return companyDao.findByUserID(id);
+    }
+
 
 }

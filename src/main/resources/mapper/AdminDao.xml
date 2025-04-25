@@ -59,6 +59,10 @@
         SELECT * FROM users
         WHERE username = #{username}
     </select>
+    <select id="findByEmail" resultType="com.example.collegeems.entity.User">
+        SELECT * FROM users
+        WHERE email = #{email}
+    </select>
 
     <!-- 根据用户名和密码查询用户 -->
     <select id="findByNameAndByPassword" resultType="com.example.collegeems.entity.User">

@@ -48,4 +48,13 @@ public class CompanyController {
         companyService.delete(id);
         return Result.success();
     }
+
+    //根据用户iD查寻公司
+    @GetMapping("/{id}")
+    public Result findById(@PathVariable Long id){
+        Company company = companyService.findByUserID(id);
+        return Result.success(company);
+    }
+
+
 }

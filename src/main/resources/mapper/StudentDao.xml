@@ -40,5 +40,15 @@
             </if>
         </where>
     </select>
+    <!--根据用户id查询-->
+    <select id="findByUserID" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Student">
+        SELECT * FROM students
+        WHERE user_id = #{userID}
+    </select>
+    <!--根据ID查询-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Student">
+        SELECT * FROM students
+        WHERE id = #{id}
+    </select>
 
 </mapper>

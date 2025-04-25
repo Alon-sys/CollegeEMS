@@ -40,4 +40,13 @@ public class StudentController {
         studentService.delete(id);
         return Result.success();
     }
+
+   //按登录用户id查询学生信息
+    @GetMapping("/{id}")
+    public Result findByUserId(@PathVariable Long id){
+        Student student = studentService.findByUserID(id);
+        return Result.success(student);
+    }
+
+
 }

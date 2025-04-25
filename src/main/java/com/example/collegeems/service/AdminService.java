@@ -45,6 +45,12 @@ public class AdminService {
         {
             throw new CustomException("该用户名已存在!");
         }
+        if (admin.getEmail()!=null){
+            User userEmail = adminDao.findByEmail(admin.getEmail());
+            if (userEmail!=null){
+                throw new CustomException("该邮箱已存在!");
+            }
+        }
         //初始化一个密码
         if (admin.getPassword()==null){
             admin.setPassword("123456");

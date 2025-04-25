@@ -26,6 +26,8 @@ public interface AdminDao {
     //按用户名查询用户
     User findByName(@Param("username") String username);
 
+    //按邮箱查询
+    User findByEmail(@Param("email") String email);
     //按用户名和密码查询用户
     User findByNameAndByPassword(@Param("username") String username,@Param("password") String password);
 }

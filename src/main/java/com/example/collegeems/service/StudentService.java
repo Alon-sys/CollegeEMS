@@ -47,4 +47,13 @@ public class StudentService {
         return PageInfo.of(list);
     }
 
+    //按用户id查询
+    public Student findByUserID(Long id) {
+        return studentDao.findByUserID(id);
+    }
+
+    public Student findById(Long id) {
+        return studentDao.findById(id);
+    }
+
 }
