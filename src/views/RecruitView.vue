@@ -26,8 +26,8 @@
         <el-table-column prop="location" label="职位地点"></el-table-column>
         <el-table-column prop="category" label="职位类别"></el-table-column>
         <el-table-column prop="type" label="职位类型"></el-table-column>
-        <el-table-column label="操作" width="180">
-          <template slot-scope="scope">
+        <el-table-column label="操作" width="180" v-if="user.role !== 'ROLE_STUDENT'">
+          <template slot-scope="scope" >
             <el-button type="primary" @click="edit(scope.row)">编辑</el-button>
             <el-popconfirm title="确定删除吗？" @confirm="deletce(scope.row.id)">
               <template slot="reference">
@@ -89,6 +89,7 @@ export default {
   name: "JobView",
   data() {
     return {
+      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
       params: {
         title: '',
         location: '',

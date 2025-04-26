@@ -31,7 +31,8 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside style="overflow: auto; background-color: #545c64; width: 250px;">
-          <el-menu :default-active="$route.path" :default-openeds="['2', '3', '4']" router background-color="#545c64"
+          <el-menu :default-active="$route.path" :default-openeds="['2', '3', '4']" 
+          router background-color="#545c64"
             text-color="#fff" active-text-color="#ffd04b">
             <el-menu-item index="/">
               <i class="el-icon-s-home"></i>
@@ -123,7 +124,7 @@ export default {
   data() {
     return {
       user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}, // 从 localStorage 中获取用户信息
-
+      
     };
   },
   methods: {

@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div style="width: 400px; height: 380px; margin: 150px auto; 
-      background-color:rgba(107,149,224,0.5); border-radius: 10px">
-      <div style="width: 100%; height: 100px; font-size: 30px;
-       line-height: 100px; text-align: center; color: #4a5ed0">
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-title">
         欢迎登录高校就业管理系统
       </div>
-      <div style="margin-top: 25px; text-align: center; height: 320px;">
+      <div class="login-form">
         <el-form :model="form">
           <el-form-item>
             <el-input v-model="form.username" prefix-icon="el-icon-user"
@@ -19,23 +17,17 @@
             style="width: 80%"
               placeholder="请输入密码"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button style="width: 80%; margin-top: 10px" 
-            type="primary" @click="login()">登录</el-button>
-            <el-button style="width: 80%; margin-top: 10px;
-             margin-right:10px;" type="primary"
-              @click="register()">注册</el-button>
-          </el-form-item>
+          <div class="button-group">
+            <el-button type="primary" @click="login()">登录</el-button>
+            <el-button type="primary" @click="register()">注册</el-button>
+          </div>
         </el-form>
-
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-
 import request from "@/utils/request";
 
 export default {
@@ -45,10 +37,6 @@ export default {
       form: {}
     }
   },
-  // 页面加载的时候，做一些事情，在created里面
-  created() {
-  },
-  // 定义一些页面上控件出发的事件调用的方法
   methods: {
     login() {
       request.post("/admin/login", this.form).then(res => {
@@ -73,3 +61,62 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.login-container {
+  width: 100%;
+  height: 100vh;
+  background-image: url('@/assets/img/login_bg.jpg'); /* 替换为图片路径 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 400px;
+  height: 350px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  border-radius: 15px; /* 圆角 */
+}
+
+.login-title {
+  width: 100%;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.login-form {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.el-input {
+  width: 100%;
+}
+
+.button-group {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+
+.button-group .el-button {
+  width: 48%; /* 留一点间隙 */
+  margin: 0;
+}
+</style>
