@@ -24,7 +24,7 @@ public class StudentController {
     }
 
 
-    // 增加公司and更新公司信息
+    // 增加学生and更新学生信息
     @PostMapping
     public Result save(@RequestBody Student student){
         if(student.getId()==null){
@@ -34,7 +34,7 @@ public class StudentController {
         }
         return Result.success(student);
     }
-    // 删除公司
+    // 删除
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id){
         studentService.delete(id);

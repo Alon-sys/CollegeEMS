@@ -1,6 +1,7 @@
 package com.example.collegeems.service;
 
 
+import com.example.collegeems.common.BCryptExample;
 import com.example.collegeems.dao.AdminDao;
 import com.example.collegeems.entity.Params;
 import com.example.collegeems.entity.User;
@@ -20,6 +21,8 @@ public class AdminService {
     //注入dao层
     @Resource
     private AdminDao adminDao;
+
+
 
 
     //分页查询
@@ -52,11 +55,14 @@ public class AdminService {
             }
         }
         //初始化一个密码
-        if (admin.getPassword()==null){
+        if (admin.getPassword()==null || admin.getPassword().isEmpty()){
             admin.setPassword("123456");
         }
+
+        admin.setPassword(BCryptExample.hashPassword(admin.getPassword()));
         admin.setCreatedAt(LocalDateTime.now());
         admin.setUpdatedAt(LocalDateTime.now());
+
         adminDao.insertUser(admin);
 
 
@@ -85,11 +91,16 @@ public class AdminService {
             throw new CustomException("用户名或密码不能为空!");
         }
         //2.从数据库中根据用户名和密码去查询用户信息
-        User user = adminDao.findByNameAndByPassword(admin.getUsername(), admin.getPassword());
+        User user = adminDao.findByName(admin.getUsername());
         if (user==null){
             throw new CustomException("用户名或密码错误!");
         }
-        //3.如果查询到了用户信息，返回用户信息
+        //3.使用 BCryptExample 类的 checkPassword 方法验证密码
+        boolean isPasswordValid = BCryptExample.checkPassword(admin.getPassword(), user.getPassword());
+        if (!isPasswordValid) {
+            throw new CustomException("用户名或密码错误!");
+        }
+        //4.如果查询到了用户信息，返回用户信息
         String token=JwtTokenUtils.genToken(user.getId().toString(),user.getPassword());
         user.setToken(token);
         return user;

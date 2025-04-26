@@ -2,8 +2,6 @@ package com.example.collegeems.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 // 分页参数
 @Data
 public class Params {
@@ -21,6 +19,8 @@ public class Params {
     private String location;
     private String category;
     private String type;
+
+    private String education;
 
 
 

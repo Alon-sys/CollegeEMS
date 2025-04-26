@@ -1,7 +1,10 @@
 package com.example.collegeems.service;
 
 import com.example.collegeems.dao.ResumeDao;
+import com.example.collegeems.entity.Params;
 import com.example.collegeems.entity.Resume;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +28,6 @@ public class ResumeService {
     public void delete(Long id) {
         resumeDao.delete(id);
     }
-    //查询所有简历
-    public List<Resume> findAll() {
-        return resumeDao.findAll();
-    }
 
     //更新简历
     public void update(Resume resume) {
@@ -36,6 +35,14 @@ public class ResumeService {
     }
 
 
+    // 分页查询简历
+    public PageInfo<Resume> findBySearch(Params params) {
+        //开启分页查询
+        //查询会自动查询分页数据
+        PageHelper.startPage(params.getPageNum(),params.getPageSize());
 
+        List<Resume> list = resumeDao.findBySearch(params);
 
+        return PageInfo.of(list);
+    }
 }

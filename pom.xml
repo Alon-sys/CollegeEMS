@@ -77,7 +77,15 @@
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
-       <!--引入 Hutool 工具类库的依赖-->
+
+        <!-- 引入 Bcrypt 加密算法的依赖 -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!--引入 Hutool 工具类库的依赖-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

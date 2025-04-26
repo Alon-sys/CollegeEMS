@@ -4,10 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.collegeems.dao.ResumeDao">
 
-    <!-- 查询所有简历 -->
-    <select id="findAll" resultType="com.example.collegeems.entity.Resume">
-        SELECT * FROM resumes
-    </select>
+
 
     <!-- 根据ID查询简历 -->
     <select id="findById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Resume">
@@ -33,6 +30,23 @@
         DELETE FROM resumes
         WHERE id = #{id}
     </delete>
+
+    <!-- 根据搜索条件查询简历 -->
+    <select id="findBySearch" parameterType="com.example.collegeems.entity.Params" resultType="com.example.collegeems.entity.Resume">
+        SELECT *
+        FROM resumes
+        <where>
+            <if test="Params != null">
+                <if test="Params.name != null and Params.name != ''">
+                    and name like concat('%', #{Params.name}, '%')
+                </if>
+                <if test="Params.education !=null and Params.education != ''">
+                    and education like concat('%', #{Params.education}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+
 
 
 

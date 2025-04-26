@@ -42,7 +42,7 @@
         SELECT *
         FROM users
         <where>
-            role != 'ROLE_ADMIN'
+           role != 'ROLE_ADMIN'
             <if test="Params != null">
                 <if test="Params.username != null and Params.username != ''">
                     and username like concat('%', #{Params.username}, '%')
@@ -62,12 +62,5 @@
     <select id="findByEmail" resultType="com.example.collegeems.entity.User">
         SELECT * FROM users
         WHERE email = #{email}
-    </select>
-
-    <!-- 根据用户名和密码查询用户 -->
-    <select id="findByNameAndByPassword" resultType="com.example.collegeems.entity.User">
-        SELECT * FROM users
-        WHERE username = #{username}
-        AND password = #{password}
     </select>
 </mapper>

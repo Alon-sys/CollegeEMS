@@ -28,6 +28,4 @@ public interface AdminDao {
 
     //按邮箱查询
     User findByEmail(@Param("email") String email);
-    //按用户名和密码查询用户
-    User findByNameAndByPassword(@Param("username") String username,@Param("password") String password);
 }

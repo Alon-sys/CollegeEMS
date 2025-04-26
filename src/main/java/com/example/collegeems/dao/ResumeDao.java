@@ -1,6 +1,8 @@
 package com.example.collegeems.dao;
 
+import com.example.collegeems.entity.Params;
 import com.example.collegeems.entity.Resume;
+import com.example.collegeems.entity.Student;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +18,5 @@ public interface ResumeDao {
 
     void delete(Long id);
 
-    List<Resume> findAll();
+    List<Resume> findBySearch(Params params);
 }
