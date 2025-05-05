@@ -44,34 +44,49 @@
         layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-
-    <el-dialog title="请填写账户信息" :visible.sync="dialogFormVisible" width="30%" center>
-      <el-form :model="form">
-        <el-form-item label="名称" :label-width="formLabelWidth">
-          <el-input v-model="form.username" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-table-column prop="role" label="角色"></el-table-column>
-        <el-form-item label="权限" label-width="15%">
-          <el-select v-model="form.role" placeholder="请选择" style="width: 90%">
-            <el-option label="企业" value="ROLE_COMPANY"></el-option>
-            <el-option label="学生" value="ROLE_STUDENT"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Email" :label-width="formLabelWidth">
-          <el-input v-model="form.email" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" :label-width="formLabelWidth">
-          <el-input v-model="form.phoneNumber" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="真实姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.realName" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button @click="submit()" type="primary">确 定</el-button>
-      </div>
-    </el-dialog>
+    <div style="margin-top: 20px;">
+      <el-dialog title="请填写账户信息" :visible.sync="dialogFormVisible" width="50%">
+        <el-form :model="form">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="名称" :label-width="formLabelWidth">
+                <el-input v-model="form.username" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-table-column prop="role" label="角色"></el-table-column>
+              <el-form-item label="权限" label-width="23%">
+                <el-select v-model="form.role" placeholder="请选择" style="width: 100%">
+                  <el-option label="企业" value="ROLE_COMPANY"></el-option>
+                  <el-option label="学生" value="ROLE_STUDENT"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="Email" :label-width="formLabelWidth">
+                <el-input v-model="form.email" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="电话" :label-width="formLabelWidth">
+                <el-input v-model="form.phoneNumber" maxlength="11" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="真实姓名" :label-width="formLabelWidth">
+                <el-input v-model="form.realName" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="submit()" type="primary">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -104,7 +119,7 @@ export default {
   //页面创建完成时执行
   created() {
     this.findBySearch();
-    
+
   },
   //页面挂载完成时执行
   methods: {
@@ -174,8 +189,7 @@ export default {
           });
         }
       })
-    }
-    ,
+    },
     deletce(id) {
       request.delete('/admin/' + id).then(res => {
         if (res.code == '200') {

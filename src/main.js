@@ -8,8 +8,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 // main.js
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // 如果需要中文支持
-
-
 // 设置为中文
 dayjs.locale('zh-cn')
 

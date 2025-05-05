@@ -1,36 +1,33 @@
 <template>
   <div>
     <div style="margin-bottom: 15px;">
-      <el-input v-model="params.username" style="width: 200px; margin-right: 10px" placeholder="请输入公司名称"></el-input>
-      <el-input v-model="params.email" style="width: 200px; margin-right: 10px" placeholder="请输入所属行业"></el-input>
-      <el-input v-model="params.role" style="width: 200px; margin-right: 10px" placeholder="请输入公司规模"></el-input>
+      <el-input v-model="params.name" style="width: 200px; margin-right: 10px" placeholder="请输入学生姓名"></el-input>
+      <el-input v-model="params.college" style="width: 200px; margin-right: 10px" placeholder="请输入学院"></el-input>
+      <el-input v-model="params.major" style="width: 200px; margin-right: 10px" placeholder="请输入专业"></el-input>
       <el-button type="warning" @click="findBySearch()">搜索</el-button>
       <el-button type="warning" @click="reset()">重置</el-button>
       <el-button type="primary" @click="add()">新增</el-button>
     </div>
     <div>
       <el-table :data="tableData" style="width: 100%; margin: 15px 0px">
-        <el-table-column prop="studentID" label="学号"></el-table-column>
+        <el-table-column prop="studentID" label="学号" width="180"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="gender" label="性别"></el-table-column>
-        <el-table-column prop="college" label="学院"></el-table-column>
-        <el-table-column prop="major" label="专业"></el-table-column>
-        <el-table-column prop="classInfo" label="班级" width="200"></el-table-column>
-        <el-table-column prop="isEmployed" label="是否就业">
-          <template v-slot="scope">
-            <el-tag v-if="scope.row.isEmployed == 1" type="success">已就业</el-tag>
+        <el-table-column prop="college" label="学院" width="180"></el-table-column>
+        <el-table-column prop="major" label="专业" width="180"></el-table-column>
+        <el-table-column prop="classInfo" label="班级" width="180"></el-table-column>
+        <el-table-column prop="isEmployed" label="就业情况">
+          <template v-slot="{ row }">
+            <el-tag v-if="row.isEmployed == 1" type="success">已就业</el-tag>
             <el-tag v-else type="info">未就业</el-tag>
           </template>
         </el-table-column>
-
         <el-table-column label="操作" width="180">
-          <template slot-scope="scope">
-            <el-button type="primary" @click="edit(scope.row)">编辑</el-button>
-            <el-popconfirm title="确定删除吗？" @confirm="deletce(scope.row.id)">
-              <template slot="reference">
-                <el-button type="danger" style="margin-left: 5px;">删除</el-button>
-              </template>
+          <template v-slot="{ row }">
+            <el-button style="margin-right: 5px;" type="primary" @click="edit(row)">编辑</el-button>
+            <el-popconfirm title="确认删除？" @confirm="deletce(row.id)">
+              <el-button slot="reference" type="danger">删除</el-button>
             </el-popconfirm>
           </template>
         </el-table-column>
@@ -45,7 +42,7 @@
     </div>
 
     <el-dialog title="请填学生信息" :visible.sync="dialogFormVisible" width="30%" center>
-      <el-form :model="form" :label-position="top">
+      <el-form :model="form" label-position="top">
         <el-form-item label="学号" :label-width="formLabelWidth">
           <el-input v-model="form.studentID" autocomplete="off"></el-input>
         </el-form-item>
@@ -69,7 +66,7 @@
           <el-input v-model="form.major" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级" :label-width="formLabelWidth">
-          <el-input v-model="form.studentClass" autocomplete="off"></el-input>
+          <el-input v-model="form.classInfo" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="就业情况">
           <el-radio-group v-model="form.isEmployed">
@@ -96,10 +93,12 @@ export default {
   name: "CompanyView",
   data() {
     return {
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      formLabelWidth: '100px',
       params: {
         name: '',
-        industry: '',
-        size: '',
+        college: '',
+        major: '',
         pageNum: 1,
         pageSize: 5
 
@@ -108,6 +107,9 @@ export default {
       total: 0,
       dialogFormVisible: false,
       form: {},
+      loading: false,
+      submitting: false,
+      isEditMode: false,
 
     }
 
@@ -115,80 +117,104 @@ export default {
 
   //页面创建完成时执行
   created() {
-    this.findBySearch();
+    this.fetchStudentList();
   },
   //页面挂载完成时执行
   methods: {
-    findBySearch() {
-      request.get('/student/search', {
-        params: this.params
-      }).then(res => {
-        if (res.code == '200') {
-          this.tableData = res.data.list;
-          this.total = res.data.total;
-        }
-        else {
-          this.$message({
-            message: res.msg,
-            type: 'error'
+    async fetchStudentList() {
+      this.loading = true;
+      try {
+        let res;
+
+        // 统一使用字符串比对（或使用常量，但需正确定义）
+        if (this.user.role === 'ROLE_ADMIN') {
+          res = await request.get('/student/search', {
+            params: this.params
           });
+        } else if (this.user.role === 'ROLE_STUDENT') {
+          res = await request.get('/student/' + this.user.id);
         }
 
-      })
-
+        if (res.code === '200') {
+          // 统一使用相同比对方式
+          if (this.user.role === 'ROLE_ADMIN') {
+            this.tableData = res.data.list || [];
+            this.total = res.data.total || 0;
+          } else if (this.user.role === 'ROLE_STUDENT') {
+            this.tableData = res.data?.id ? [res.data] : [];
+            this.total = 1;
+          }
+        } else {
+          this.$message.error(res.msg || '获取数据失败');
+        }
+      } catch (error) {
+        console.error('获取学生列表失败:', error);
+        this.$message.error('获取数据失败，请稍后重试');
+      } finally {
+        this.loading = false;
+      }
     },
+
+
     //新增操作
-    //清空表单数据
     add() {
       this.form = {};
+      this.isEditMode = false;
       this.dialogFormVisible = true;
     },
     //编辑操作
-    //将选中行的数据赋值给表单数据
     edit(row) {
-      this.form = row;
+      this.form = { ...row };
+      this.isEditMode = true; // 设置为编辑模式
       this.dialogFormVisible = true;
     },
 
     //重置操作
     reset() {
       this.params = {
-        username: '',
-        email: '',
+        name: '',
+        college: '',
+        major: '',
         pageNum: '1',
         pageSize: '5',
       }
-      this.findBySearch();
+      this.fetchStudentList();
     },
 
     //分页操作
     // pageNum:当前页码，pageSize:每页显示条数
     handleSizeChange(pageSize) {
       this.params.pageSize = pageSize;
-      this.findBySearch();
+      this.fetchStudentList();
     },
     handleCurrentChange(pageNum) {
       this.params.pageNum = pageNum;
-      this.findBySearch();
+      this.fetchStudentList();
     },
     //新增和编辑操作
-    submit() {
-      request.post('/student', this.form).then(res => {
+    async submit() {
+      try {
+
+        this.submitting = true;
+        if (this.user.role === 'ROLE_STUDENT') {
+          this.form.userID = this.user.id; // 设置用户ID
+        }
+        const apiUrl = this.isEditMode ? `/student` : '/student';
+        const res = await request.post(apiUrl, this.form);
+
         if (res.code === '200') {
-          this.$message({
-            message: ('操作成功'),
-            type: 'success'
-          });
+          this.$message.success(this.isEditMode ? '更新成功' : '新增成功');
           this.dialogFormVisible = false;
-          this.findBySearch();
+          this.fetchStudentList();
+        } else {
+          this.$message.error(res.msg || '操作失败');
         }
-        else {
-          this.$message({
-            message: (res.msg),
-            type: 'error'
-          });
-        }
-      })
+      } catch (error) {
+        console.error('提交表单失败:', error);
+        this.$message.error('操作失败，请稍后重试');
+      } finally {
+        this.submitting = false;
+      }
     },
     //删除操作
     deletce(id) {
@@ -198,7 +224,7 @@ export default {
             message: ('删除成功'),
             type: 'success'
           });
-          this.findBySearch();
+          this.fetchStudentList();
         }
         else {
           this.$message({

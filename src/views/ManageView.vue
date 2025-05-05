@@ -31,8 +31,7 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside style="overflow: auto; background-color: #545c64; width: 250px;">
-          <el-menu :default-active="$route.path" :default-openeds="['2', '3', '4']" 
-          router background-color="#545c64"
+          <el-menu :default-active="$route.path" :default-openeds="['2', '3', '4','5','6','7','8']" router background-color="#545c64"
             text-color="#fff" active-text-color="#ffd04b">
             <el-menu-item index="/">
               <i class="el-icon-s-home"></i>
@@ -46,22 +45,52 @@
                 <el-menu-item index="/admin">用户信息管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="3">
+            <el-submenu index="3" v-if="user.role !== 'ROLE_STUDENT'">
               <template slot="title">
                 <i class="el-icon-location"></i><span>企业信息管理</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/company">公司信息</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="4">
+              <template slot="title">
+                <i class="el-icon-location"></i><span>招聘信息</span>
+              </template>
+              <el-menu-item-group>
                 <el-menu-item index="/recruit">招聘信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="4" v-if="user.role !== 'ROLE_COMPANY'">
+            <el-submenu index="5" v-if="user.role !== 'ROLE_COMPANY'">
               <template slot="title">
                 <i class="el-icon-location"></i><span>学生信息管理</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/student">学生信息</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="6">
+              <template slot="title">
+                <i class="el-icon-location"></i><span>简历信息</span>
+              </template>
+              <el-menu-item-group>
                 <el-menu-item index="/resume">简历信息</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="7">
+              <template slot="title">
+                <i class="el-icon-location"></i><span>投递记录</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/applicationProgress">投递记录</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="8">
+              <template slot="title">
+                <i class="el-icon-location"></i><span>公告管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/notice">公告信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -95,7 +124,7 @@
   /* 确保主内容区域不超出视口 */
 }
 
-.el-main > div {
+.el-main>div {
   flex: 1;
   overflow: auto;
   /* 主内容区域内部滚动 */
@@ -124,7 +153,7 @@ export default {
   data() {
     return {
       user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}, // 从 localStorage 中获取用户信息
-      
+
     };
   },
   methods: {

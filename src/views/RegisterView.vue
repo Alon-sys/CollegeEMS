@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <div
-      style="width: 400px; height: 650px; margin: 150px auto; background-color:rgba(107,149,224,0.5); border-radius: 10px">
-      <div style="width: 100%; height: 100px; font-size: 30px; line-height: 100px; text-align: center; color: #4a5ed0">
+  <div class="register-container">
+    <div class="register-box">
+      <div class="register-title">
         欢迎注册高校就业管理系统</div>
-      <div style="margin-top: 25px; text-align: center; height: 320px;">
+      <div class="register-form">
         <el-form :model="form">
           <el-form-item>
             <el-input v-model="form.username" prefix-icon="el-icon-user" style="width: 80%"
@@ -40,6 +39,42 @@
   </div>
 
 </template>
+
+<style>
+.register-container {
+  width: 100%;
+  height: 100vh;
+  background-image: url('@/assets/img/login_bg.jpg'); /* 替换为图片路径 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+}
+
+.register-box {
+  width: 400px;
+  height: 650px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  border-radius: 15px; /* 圆角 */
+  margin-top: 50px;
+}
+.register-title {
+  width: 100%;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+.register-form {
+  margin-top: 10px;
+  text-align: center;
+}
+</style>
 
 <script>
 
