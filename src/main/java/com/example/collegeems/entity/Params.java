@@ -5,12 +5,17 @@ import lombok.Data;
 // 分页参数
 @Data
 public class Params {
+    private Long userId;
+    private Long jobId;
+    private Long resumeId;
+    private String status;
     private Long id;
     private String username;
     private String email;
     private Integer pageNum;
     private Integer pageSize;
     private String studentID;
+    private String studentName;
     private String name;
     private String industry;
     private String size;

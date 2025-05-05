@@ -38,7 +38,7 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id){
         studentService.delete(id);
-        return Result.success();
+        return Result.success ();
     }
 
    //按登录用户id查询学生信息

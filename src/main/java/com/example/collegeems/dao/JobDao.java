@@ -21,4 +21,8 @@ public interface JobDao {
     // 根据搜索条件查询职位
     List<Job> findBySearch(@Param("Params") Params params);
 
+    List<Job> findByUserId(Long id);
+
+
+
 }

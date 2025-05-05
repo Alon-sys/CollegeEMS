@@ -16,7 +16,7 @@ public class JobController {
     @Resource
     private JobService jobService;
 
-    // 增加公司and更新公司信息
+    // 增加职位and更新公司职位信息
     @PostMapping
     public Result save(@RequestBody Job job){
         if(job.getId()==null){
@@ -26,9 +26,8 @@ public class JobController {
         }
         return Result.success(job);
     }
-
     @DeleteMapping("/{id}")
-    public Result delete(Long id){
+    public Result delete(@PathVariable Long id){
         jobService.delete(id);
         return Result.success();
     }
@@ -39,5 +38,11 @@ public class JobController {
     public Result findBySearch(Params params){
         PageInfo<Job> info = jobService.findBySearch(params);
         return Result.success(info);
+    }
+
+    //按id查询
+    @GetMapping("/{id}")
+    public Result findByUserId(@PathVariable Long id){
+        return Result.success(jobService.findByUserId(id));
     }
 }

@@ -11,15 +11,25 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long companyId;
+    @Column(name = "user_id")
+    private Long userId;
+    @Column(name = "title")
     private String title;
+    @Column(name = "salary")
     private String salary;
+    @Column(name = "education")
     private String description;
+    @Column(name = "createAt")
     private LocalDateTime createdAt;
+    @Column(name = "updateAt")
     private LocalDateTime updatedAt;
+    @Column(name = "location")
     private String location;
+    @Column(name = "category")
     private String category;
+    @Column(name = "type")
     private String type;
+    @Column(name = "isActive")
     private Boolean isActive;
 
 

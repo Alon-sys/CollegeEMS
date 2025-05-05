@@ -14,7 +14,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "user_id")
-    private Long userID;
+    private Long userId;
     @Column(name = "name", unique = true)
     private String name;
     @Column(name = "logo")

@@ -22,6 +22,7 @@ public class FileController {
     // 文件上传存储路径
     private static final String filePath = System.getProperty("user.dir") + "/file/";
 
+
     /**
      * 文件上传
      */
@@ -41,7 +42,7 @@ public class FileController {
             } catch (Exception e) {
                 System.err.println(fileName + "--文件上传失败");
             }
-            return Result.success(flag);
+            return Result.success(flag + "-" + fileName);
         }
     }
 
@@ -71,5 +72,6 @@ public class FileController {
             System.out.println("文件下载失败");
         }
     }
+
 
 }

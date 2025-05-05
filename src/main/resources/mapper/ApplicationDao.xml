@@ -4,16 +4,60 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.collegeems.dao.ApplicationDao">
 
-    <!--查询所有-->
-    <select id="findAll" resultType="com.example.collegeems.entity.Application">
-        SELECT * FROM applications
-    </select>
-
-    <!--保存-->
+    <!-- 保存申请 -->
     <insert id="save" parameterType="com.example.collegeems.entity.Application">
         INSERT INTO applications (user_id, job_id, resume_id, status, applied_at, updated_at)
         VALUES (#{userId}, #{jobId}, #{resumeId}, #{status}, #{appliedAt}, #{updatedAt})
     </insert>
 
+    <!-- 更新申请 -->
+    <update id="update" parameterType="com.example.collegeems.entity.Application">
+        UPDATE applications
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="jobId != null">job_id = #{jobId},</if>
+            <if test="resumeId != null">resume_id = #{resumeId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="appliedAt != null">applied_at = #{appliedAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除申请 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM applications WHERE id = #{id}
+    </delete>
+
+    <!-- 条件查询申请 -->
+    <select id="findBySearch" resultType="com.example.collegeems.entity.Application">
+        SELECT applications.*, jobs.title as jobTitle,  resumes.name as studentName FROM applications
+        left join Jobs  on applications.job_id = Jobs.id
+        left join resumes on applications.resume_id = resumes.id
+        <where>
+        <if test="params != null and params.title != null and params.title != ''">
+            and applications.jobTitle like concat('%', #{params.title}, '%')
+        </if>
+        <if test="params != null and params.studentName != null and params.studentName != ''">
+            and applications.studentName like concat('%', #{params.studentName}, '%')
+        </if>
+        </where>
+    </select>
+
+    <!-- 根据ID查询申请 -->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Application">
+        SELECT * FROM applications WHERE id = #{id}
+    </select>
+
+    <!-- 检查用户是否已申请某职位 -->
+    <select id="existsByUserIdAndJobId" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM applications
+                      WHERE user_id = #{userId} AND job_id = #{jobId})
+    </select>
+
+    <!-- 根据用户ID查询所有申请 -->
+    <select id="findByUserId" resultType="com.example.collegeems.entity.Application">
+        SELECT * FROM applications WHERE user_id = #{userId}
+    </select>
 
 </mapper>

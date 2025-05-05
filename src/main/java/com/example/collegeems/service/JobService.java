@@ -18,9 +18,10 @@ public class JobService {
     private JobDao jobDao;
 
     public void save(Job job) {
-        jobDao.save(job);
         job.setCreatedAt(LocalDateTime.now());
         job.setUpdatedAt(LocalDateTime.now());
+        jobDao.save(job);
+
     }
 
     public void delete(Long id) {
@@ -29,8 +30,9 @@ public class JobService {
     }
 
     public void update(Job job) {
-        jobDao.update(job);
         job.setUpdatedAt(LocalDateTime.now());
+        jobDao.update(job);
+
     }
 
     //按条件查询
@@ -45,5 +47,8 @@ public class JobService {
 
 
     }
-
+    //按公司id查询
+    public List<Job> findByUserId(Long id) {
+        return jobDao.findByUserId(id);
+    }
 }

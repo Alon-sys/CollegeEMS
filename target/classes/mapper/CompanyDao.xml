@@ -13,14 +13,14 @@
 
     <!-- 新增公司 -->
     <insert id="save" parameterType="com.example.collegeems.entity.Company">
-        INSERT INTO companies (name,user_id, logo, website, description, industry, size)
-        VALUES (#{name}, #{logo},#{userID}, #{website}, #{description}, #{industry}, #{size})
+        INSERT INTO companies (name, user_id, logo, website, description, industry, size)
+        VALUES (#{name}, #{userId}, #{logo}, #{website}, #{description}, #{industry}, #{size})
     </insert>
 
     <!-- 更新公司信息 -->
     <update id="update" parameterType="com.example.collegeems.entity.Company">
         UPDATE companies
-        SET name = #{name}, logo = #{logo}, website = #{website}, description = #{description}, industry = #{industry}, size = #{size}
+        SET name = #{name},user_id = #{userId},logo = #{logo}, website = #{website}, description = #{description}, industry = #{industry}, size = #{size}
         WHERE id = #{id}
     </update>
     <!-- 删除公司 -->

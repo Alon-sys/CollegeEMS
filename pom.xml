@@ -85,6 +85,14 @@
             <version>0.4</version>
         </dependency>
 
+        <!--autolog-->
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>auto-log-springboot-starter</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+
+
         <!--引入 Hutool 工具类库的依赖-->
         <dependency>
             <groupId>cn.hutool</groupId>

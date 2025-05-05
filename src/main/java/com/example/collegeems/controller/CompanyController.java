@@ -3,7 +3,6 @@ package com.example.collegeems.controller;
 import com.example.collegeems.common.Result;
 import com.example.collegeems.entity.Company;
 import com.example.collegeems.entity.Params;
-import com.example.collegeems.entity.User;
 import com.example.collegeems.service.CompanyService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
@@ -13,12 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
-
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Resource
     private CompanyService companyService;
@@ -54,6 +52,13 @@ public class CompanyController {
     public Result findById(@PathVariable Long id){
         Company company = companyService.findByUserID(id);
         return Result.success(company);
+    }
+
+    //查询所有信息
+    @GetMapping
+    public Result findAll(){
+        List<Company> list = companyService.findAll();
+        return Result.success(list);
     }
 
 

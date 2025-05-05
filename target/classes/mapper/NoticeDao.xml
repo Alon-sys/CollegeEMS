@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.collegeems.dao.NoticeDao">
+
+    <select id="findBySearch" resultType="com.example.collegeems.entity.Notice">
+        select * from notice
+        <where>
+            <if test="params != null and params.title != null and params.title != ''">
+                and title like concat('%', #{ params.title }, '%')
+            </if>
+        </where>
+        order by time desc
+    </select>
+
+    <select id="findById" resultType="com.example.collegeems.entity.Notice">
+        select * from notice where id = #{id}
+    </select>
+
+    <!--保存-->
+    <insert id="save" parameterType="com.example.collegeems.entity.Notice">
+        insert into notice(title,content,time) values(#{title},#{content},#{time})
+    </insert>
+
+    <!-- 修改  -->
+    <update id="update" parameterType="com.example.collegeems.entity.Notice">
+        update notice set title = #{title},content = #{content},time = #{time} where id = #{id}
+    </update>
+
+    <!-- 删除  -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from notice where id = #{id}
+    </delete>
+
+    <select id="findTop5" resultType="com.example.collegeems.entity.Notice">
+        select * from notice order by time desc limit 5
+    </select>
+
+</mapper>

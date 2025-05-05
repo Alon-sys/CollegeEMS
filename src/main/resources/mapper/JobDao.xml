@@ -28,21 +28,20 @@
                 <if test="Params.type != null and Params.type != ''">
                     and type like concat('%', #{Params.type}, '%')
                 </if>
-
             </if>
         </where>
     </select>
 
     <!--新增-->
     <insert id="save" parameterType="com.example.collegeems.entity.Job">
-        INSERT INTO jobs (company_id, title, salary, description, created_at, updated_at, location, category, type, is_active)
-        VALUES (#{companyId}, #{title}, #{salary}, #{description}, #{createdAt}, #{updatedAt}, #{location}, #{category}, #{type}, #{isActive})
+        INSERT INTO jobs (user_id, title, salary, description, created_at, updated_at, location, category, type, is_active)
+        VALUES (#{userId}, #{title}, #{salary}, #{description}, #{createdAt}, #{updatedAt}, #{location}, #{category}, #{type}, #{isActive})
     </insert>
 
     <!--更新-->
     <update id="update" parameterType="com.example.collegeems.entity.Job">
         UPDATE jobs
-        SET company_id = #{companyId}, title = #{title}, salary = #{salary}, description = #{description}, created_at = #{createdAt}, updated_at = #{updatedAt}, location = #{location}, category = #{category}, type = #{type}, is_active = #{isActive}
+        SET user_id = #{userId}, title = #{title}, salary = #{salary}, description = #{description}, created_at = #{createdAt}, updated_at = #{updatedAt}, location = #{location}, category = #{category}, type = #{type}, is_active = #{isActive}
         WHERE id = #{id}
     </update>
 
@@ -52,5 +51,10 @@
         WHERE id = #{id}
     </delete>
 
+    <!--按用户ID查询-->
+    <select id="findByUserId" parameterType="java.lang.Long" resultMap="jobMap">
+        SELECT * FROM jobs
+        WHERE user_id = #{userId}
+    </select>
 
 </mapper>

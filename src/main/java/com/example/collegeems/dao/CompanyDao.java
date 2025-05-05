@@ -21,4 +21,7 @@ public interface CompanyDao {
     //根据用户iD查询数据
     Company findByUserID(Long id);
 
+    //查询所有
+    List<Company> findAll();
+
 }

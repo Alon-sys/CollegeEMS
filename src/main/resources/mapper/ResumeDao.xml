@@ -13,15 +13,59 @@
     </select>
 
     <!-- 插入简历 -->
-    <insert id="save" parameterType="com.example.collegeems.entity.Resume">
-        INSERT INTO resumes (user_id, job_id, resume_url, created_at, updated_at)
-        VALUES (#{userId}, #{jobId}, #{resumeUrl}, #{createdAt}, #{updatedAt})
+    <insert id="save" parameterType="com.example.collegeems.entity.Resume" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO resumes (
+            user_id,
+            resume_photo,
+            content,
+            created_at,
+            updated_at,
+            name,
+            gender,
+            birthday,
+            education,
+            school,
+            major,
+            skills,
+            experience,
+            projects,
+            resume_url
+        ) VALUES (
+                     #{userId},
+                     #{resumePhoto},
+                     #{content},
+                     #{createdAt},
+                     #{updatedAt},
+                     #{name},
+                     #{gender},
+                     #{birthday},
+                     #{education},
+                     #{school},
+                     #{major},
+                     #{skills},
+                     #{experience},
+                     #{projects},
+                     #{resumeUrl}
+                 )
     </insert>
 
     <!-- 更新简历 -->
     <update id="update" parameterType="com.example.collegeems.entity.Resume">
         UPDATE resumes
-        SET user_id = #{userId}, job_id = #{jobId}, resume_url = #{resumeUrl}, created_at = #{createdAt}, updated_at = #{updatedAt}
+        SET user_id = #{userId},
+            resume_photo = #{resumePhoto},
+            content = #{content},
+            updated_at = #{updatedAt},
+            name = #{name},
+            gender = #{gender},
+            birthday = #{birthday},
+            education = #{education},
+            school = #{school},
+            major = #{major},
+            skills = #{skills},
+            experience = #{experience},
+            projects = #{projects},
+            resume_url = #{resumeUrl}
         WHERE id = #{id}
     </update>
 
@@ -32,19 +76,24 @@
     </delete>
 
     <!-- 根据搜索条件查询简历 -->
-    <select id="findBySearch" parameterType="com.example.collegeems.entity.Params" resultType="com.example.collegeems.entity.Resume">
+    <select id="findBySearch" resultType="com.example.collegeems.entity.Resume">
         SELECT *
         FROM resumes
         <where>
-            <if test="Params != null">
-                <if test="Params.name != null and Params.name != ''">
-                    and name like concat('%', #{Params.name}, '%')
+            <if test="params != null">
+                <if test="params.name != null and params.name != ''">
+                    AND name LIKE CONCAT('%', #{params.name}, '%')
                 </if>
-                <if test="Params.education !=null and Params.education != ''">
-                    and education like concat('%', #{Params.education}, '%')
+                <if test="params.education != null and params.education != ''">
+                    AND education LIKE CONCAT('%', #{params.education}, '%')
                 </if>
             </if>
         </where>
+    </select>
+
+    <select id="findByUserId" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Resume">
+        SELECT * FROM resumes
+        WHERE user_id = #{userId}
     </select>
 
 
