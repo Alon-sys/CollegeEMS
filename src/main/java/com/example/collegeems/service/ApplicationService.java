@@ -60,16 +60,6 @@ public class ApplicationService {
         PageHelper.startPage(params.getPageNum(),params.getPageSize());
 
         List<Application> list = applicationDao.findBySearch(params);
-        /*for (Application application : list) {
-            if (ObjectUtil.isAllEmpty(application.getJobId())){
-                Job job = jobDao.findById(application.getJobId());
-                if (ObjectUtil.isAllEmpty(job)){
-                    application.setJobTitle(job.getTitle());
-                }
-
-            }
-
-        }*/
 
         return PageInfo.of(list);
     }
@@ -84,4 +74,11 @@ public class ApplicationService {
         return applicationDao.existsByUserIdAndJobId(userId, jobId);
     }
 
+    public List<Application> findByUserId(Long id) {
+        return applicationDao.findByUserId(id);
+    }
+
+    public List<Application> findByCompanyUserId(Long id) {
+        return applicationDao.findByCompanyUserId(id);
+    }
 }

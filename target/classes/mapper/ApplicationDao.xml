@@ -57,7 +57,25 @@
 
     <!-- 根据用户ID查询所有申请 -->
     <select id="findByUserId" resultType="com.example.collegeems.entity.Application">
-        SELECT * FROM applications WHERE user_id = #{userId}
+        SELECT applications.*, jobs.title as jobTitle,  resumes.name as studentName FROM applications
+        left join Jobs  on applications.job_id = Jobs.id
+        left join resumes on applications.resume_id = resumes.id
+        WHERE applications.user_id = #{userId}
+    </select>
+
+    <select id="findByCompanyUserId" resultType="com.example.collegeems.entity.Application">
+        SELECT
+        applications.*,
+        jobs.title AS job_title,
+        resumes.name AS studentName
+        FROM
+        applications
+        LEFT JOIN
+        jobs ON applications.job_id = jobs.id
+        LEFT JOIN
+        resumes ON applications.resume_id = resumes.id
+        WHERE
+        jobs.user_id = #{companyUserId}  <!-- 直接关联 jobs.user_id -->
     </select>
 
 </mapper>

@@ -47,7 +47,7 @@ public class JobService {
 
 
     }
-    //按公司id查询
+    //按id查询
     public List<Job> findByUserId(Long id) {
         return jobDao.findByUserId(id);
     }

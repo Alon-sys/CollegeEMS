@@ -1,6 +1,7 @@
 package com.example.collegeems.service;
 
 
+import cn.hutool.crypto.digest.BCrypt;
 import com.example.collegeems.common.BCryptExample;
 import com.example.collegeems.dao.AdminDao;
 import com.example.collegeems.entity.Params;
@@ -56,10 +57,13 @@ public class AdminService {
         }
         //初始化一个密码
         if (admin.getPassword()==null || admin.getPassword().isEmpty()){
-            admin.setPassword("123456");
-        }
+            String rawPassword = "123456"; // 默认密码
+            String encodedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+           admin.setPassword(encodedPassword);
+        }else {
 
-        admin.setPassword(BCryptExample.hashPassword(admin.getPassword()));
+            admin.setPassword(BCryptExample.hashPassword(admin.getPassword()));
+        }
         admin.setCreatedAt(LocalDateTime.now());
         admin.setUpdatedAt(LocalDateTime.now());
 
@@ -71,6 +75,8 @@ public class AdminService {
     //修改用户
     public void update(User admin) {
         admin.setUpdatedAt(LocalDateTime.now());
+
+        admin.setPassword(BCryptExample.hashPassword(admin.getPassword()));
         adminDao.updateUser(admin);
 
     }
@@ -111,5 +117,33 @@ public class AdminService {
         {
             return adminDao.selectUserById(id);
         }
+
+    public boolean changePassword(Long userId, String oldPassword, String newPassword) {
+        // 1. 查询用户
+        User user = findById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+
+        // 2. 验证旧密码
+        if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
+            return false;
+        }
+
+        // 3. 检查新旧密码是否相同
+        if (BCrypt.checkpw(newPassword, user.getPassword())) {
+            throw new RuntimeException("新密码不能与旧密码相同");
+        }
+
+        // 4. 加密新密码
+        String encodedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+        // 5. 更新密码
+        user.setPassword(encodedNewPassword);
+        user.setUpdatedAt(LocalDateTime.now());
+        adminDao.updateUser(user);
+
+        return true;
+    }
 
 }

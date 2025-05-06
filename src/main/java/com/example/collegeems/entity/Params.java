@@ -27,6 +27,8 @@ public class Params {
 
     private String education;
 
+    private String companyUserId;
+
 
 
 

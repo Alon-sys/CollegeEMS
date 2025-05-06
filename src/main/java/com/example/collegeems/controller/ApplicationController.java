@@ -53,4 +53,16 @@ public class ApplicationController {
         return Result.success(applicationService.findBySearch(params));
     }
 
+    //按用户查询
+    @GetMapping("/user/{id}")
+    public Result findByUserId(@PathVariable Long id){
+        return Result.success(applicationService.findByUserId(id));
+    }
+
+
+    @GetMapping("/company/{id}")
+    public Result findByCompanyId(@PathVariable Long id){
+        return Result.success(applicationService.findByCompanyUserId(id));
+    }
+
 }

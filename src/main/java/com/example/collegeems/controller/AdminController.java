@@ -4,10 +4,10 @@ import com.example.collegeems.common.Result;
 import com.example.collegeems.entity.User;
 import com.example.collegeems.entity.Params;
 import com.example.collegeems.service.AdminService;
+import com.example.collegeems.util.JwtTokenUtils;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Resource
     private AdminService adminService;
@@ -67,5 +65,35 @@ public class AdminController {
         adminService.add(user);
         return Result.success();
     }
+
+    @PostMapping("/changePassword")
+    public Result changePassword(@RequestBody ChangePasswordDTO dto) {
+        // 从token中获取当前用户
+        User currentUser = JwtTokenUtils.getCurrentUser();
+        if (currentUser == null) {
+            return Result.error("请先登录");
+        }
+
+        // 调用服务层修改密码
+        try {
+            boolean success = adminService.changePassword(currentUser.getId(), dto.getOldPassword(), dto.getNewPassword());
+            if (success) {
+                return Result.success();
+            } else {
+                return Result.error("旧密码不正确");
+            }
+        } catch (Exception e) {
+            return Result.error("修改密码失败: " + e.getMessage());
+        }
+    }
+
+    // 专用的DTO类
+    @Data
+    static class ChangePasswordDTO {
+        private String oldPassword;
+        private String newPassword;
+        private String confirmPassword;
+    }
+
 
 }

@@ -28,4 +28,7 @@ public interface AdminDao {
 
     //按邮箱查询
     User findByEmail(@Param("email") String email);
+
+
+
 }
