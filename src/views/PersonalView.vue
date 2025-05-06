@@ -37,6 +37,7 @@
       <el-descriptions class="user-info" title="账户信息" :column="3" border>
         <template slot="extra">
           <el-button type="primary" size="small" @click="editUserInfo">编辑</el-button>
+          <el-button type="primary" size="small" @click="editPassword">修改密码</el-button>
         </template>
         <el-descriptions-item>
           <template slot="label"><i class="el-icon-user"></i>用户名</template>
@@ -129,7 +130,7 @@
               <el-input v-model="editForm.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input type="password" show-password  v-model="editForm.password" placeholder="请输入密码"></el-input>
+              <el-input type="password" show-password v-model="editForm.password" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item label="真实姓名" prop="realName">
               <el-input v-model="editForm.realName" placeholder="请输入真实姓名"></el-input>
@@ -210,6 +211,24 @@
         </div>
       </el-dialog>
     </div>
+    <!--修改密码-->
+    <el-dialog title="修改密码" :visible.sync="passwordFormVisible" width="30%" center>
+      <el-form :model="editForm" :rules="passwordRules" ref="passwordForm" label-width="100px">
+        <el-form-item label="旧密码" prop="oldPassword">
+          <el-input type="password" v-model="editForm.oldPassword" placeholder="请输入旧密码" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" v-model="editForm.newPassword" placeholder="请输入新密码" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input type="password" v-model="editForm.confirmPassword" placeholder="请再次输入新密码" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="passwordFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitPasswordForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -239,6 +258,25 @@ export default {
         callback();
       }
     };
+    const validatePassword = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入密码'));
+      } else if (value.length < 6) {
+        callback(new Error('密码长度不能少于6位'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateConfirmPassword = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.editForm.newPassword) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       editType: '', // 添加这个属性
       userRules: {
@@ -260,6 +298,12 @@ export default {
         website: [{ required: true, message: '请输入公司官网', trigger: 'blur' }],
         industry: [{ required: true, message: '请输入所属行业', trigger: 'blur' }]
       },
+      passwordRules: {
+        oldPassword: [{ required: true, validator: validatePassword, trigger: 'blur' }],
+        newPassword: [{ required: true, validator: validatePassword, trigger: 'blur' }],
+        confirmPassword: [{ required: true, validator: validateConfirmPassword, trigger: 'blur' }]
+      },
+      // 用户信息
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       userInfo: {},         // 用户基本信息
       studentInfo: null,    // 学生信息(仅学生角色)
@@ -267,6 +311,7 @@ export default {
 
       // 编辑相关数据
       dialogFormVisible: false,
+      passwordFormVisible: false,
       editDialogTitle: '编辑账户信息',
       editForm: {},         // 编辑表单数据
     };
@@ -346,6 +391,22 @@ export default {
         this.$refs.userForm && this.$refs.userForm.clearValidate();
       });
     },
+    /**
+     * 修改密码
+     */
+    editPassword() {
+      this.editType = 'password';
+      this.editDialogTitle = '修改密码';
+      this.editForm = {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      };
+      this.passwordFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs.userForm && this.$refs.userForm.clearValidate();
+      });
+    },
 
     /**
      * 编辑学生信息
@@ -385,7 +446,7 @@ export default {
     submitForm() {
       let formName = this.editType + 'Form';
       this.$refs[formName].clearValidate(); // 清除之前的验证错误
-      if (this.user.role === 'ROLE_ADMIN'|| this.user.role === 'ROLE_COMPANY'|| this.user.role === 'ROLE_STUDENT') {
+      if (this.user.role === 'ROLE_ADMIN' || this.user.role === 'ROLE_COMPANY' || this.user.role === 'ROLE_STUDENT') {
         formName = 'userForm';
       } else if (this.user.role === 'ROLE_STUDENT') {
         formName = 'studentForm';
@@ -429,6 +490,47 @@ export default {
         } catch (error) {
           this.$message.error('提交失败');
           console.error('提交表单失败:', error);
+        }
+      });
+    },
+    async submitPasswordForm() {
+      this.$refs.passwordForm.validate(async (valid) => {
+        if (!valid) {
+          this.$message.error('请填写完整信息');
+          return;
+        }
+
+        try {
+          const loading = this.$loading({
+            lock: true,
+            text: '正在修改密码...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+
+          const res = await request.post('/admin/changePassword', {
+            oldPassword: this.editForm.oldPassword,
+            newPassword: this.editForm.newPassword,
+            confirmPassword: this.editForm.confirmPassword
+          });
+
+          loading.close();
+
+          if (res.code === '200') {
+            this.$message.success({
+              message: '密码修改成功，请重新登录',
+              duration: 2000,
+              onClose: () => {
+                this.passwordFormVisible = false;
+                this.logout();
+              }
+            });
+          } else {
+            this.$message.error(res.msg || '密码修改失败');
+          }
+        } catch (error) {
+          this.$message.error('密码修改失败: ' + (error.response?.data?.msg || error.message));
+          console.error('修改密码失败:', error);
         }
       });
     },

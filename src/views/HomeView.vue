@@ -18,9 +18,6 @@
           高校就业管理系统
         </span>
         <el-menu mode="horizontal" background-color="#687179" text-color="#fff" active-text-color="#ffd04b">
-          <el-menu-item @click="viewJobOpening()" style="transition: color 0.3s;">
-            招聘信息
-          </el-menu-item>
           <el-menu-item @click="backgroundManagement()" style="transition: color 0.3s;">
             后台管理
           </el-menu-item>
@@ -99,17 +96,18 @@
                 </template>
                 <el-table :data="announcements" style="width: 100%" :show-header="false">
                   <el-table-column prop="title" label="标题">
-                    <template #default="scope" >
+                    <template #default="scope">
                       <div class="announcement-item">
                         <span class="announcement-title">{{ scope.row.title }}</span>
-                        <span class="announcement-date">{{formatDate( scope.row.time) }}</span>
+                        <el-button type="text" @click="viewEditor(scope.row.content)">查看</el-button>
+                        <span class="announcement-date">{{ formatDate(scope.row.time) }}</span>
                       </div>
                     </template>
                   </el-table-column>
                 </el-table>
               </el-card>
             </el-col>
-            <el-card v-if="user.role !== 'ROLE_COMPANY'" class="quick-actions-card">
+            <el-card class="quick-actions-card">
               <template #header>
                 <div class="card-header">快捷操作</div>
               </template>
@@ -144,6 +142,9 @@
         </div>
       </div>
     </el-main>
+    <el-dialog title="公告内容" :visible.sync="editorVisible" width="50%">
+      <div v-html="this.viewData" class="w-e-text"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -288,6 +289,7 @@
   color: #606266;
   cursor: pointer;
   transition: color 0.3s;
+  width: 200px;
 }
 
 .announcement-title:hover {
@@ -394,17 +396,36 @@
 import request from '@/utils/request';
 import dayjs from 'dayjs';
 
+import E from 'wangeditor'
+
+let editor
+function initWangEditor(content) {
+  setTimeout(() => {
+    if (!editor) {
+      editor = new E('#editor')
+      editor.config.placeholder = '请输入内容'
+      editor.config.uploadFileName = 'file'
+      editor.config.uploadImgServer = 'http://localhost:8888/api/files/wang/upload'
+      editor.create()
+    }
+    editor.txt.html(content)
+  }, 0)
+}
+
 export default {
   name: 'HomeView',
   data() {
     return {
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      viewData: '',
+      editorVisible: false,
+      user: JSON.parse(localStorage.getItem('user')) || {},
       form: {},
       employmentCount: 1286,
       averageSalary: 8560,
       topIndustry: '互联网',
       announcements: []
     };
+    
   },
   //页面创建完成时执行
   created() {
@@ -412,8 +433,8 @@ export default {
 
   },
   methods: {
-     // 日期格式化方法
-     formatDate(data) {
+    // 日期格式化方法
+    formatDate(data) {
       return dayjs(data).format('YYYY-MM-DD');
     },
     findByNotice() {
@@ -427,6 +448,11 @@ export default {
           console.error('获取公告失败:', error);
           this.$message.error('获取公告失败');
         });
+    },
+    viewEditor(data) {
+      // 查看公告
+      this.viewData = data;
+      this.editorVisible = true;
     },
     goToPersonalCenter() {
       this.$router.push("/personal");
@@ -442,18 +468,22 @@ export default {
     backgroundManagement() {
       this.$router.push("/manage");
     },
-    viewJobOpening() {
-      // 查看招聘信息
-      this.$router.push("/JobOpening");
-
-    },
     viewAllAnnouncements() {
       // 查看所有公告
       this.$router.push("/notice");
     },
     uploadResume() {
       // 上传简历
-      this.$router.push("/resume");
+      if (this.user.role !== 'ROLE_COMPANY') {
+        this.$router.push("/resume");
+      }
+      else {
+        this.$message({
+          message: '企业不能上传简历',
+          type: 'warning'
+        });
+      }
+
     },
     viewJobs() {
       // 查看职位
@@ -465,7 +495,17 @@ export default {
     },
     consult() {
       // 就业咨询
+      this.$alert('请拨打:010-12345678', '就业咨询', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'success',
+            message: "祝你就业顺利！"
+          });
+        }
+      });
     }
+
   }
 };
 </script>

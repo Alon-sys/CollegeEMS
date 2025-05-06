@@ -10,7 +10,7 @@
         <div class="resume-section">
           <div class="section-header">
             <h2>基本信息</h2>
-            <div class="action-buttons">
+            <div v-if="this.user.role !== 'ROLE_COMPANY'" class="action-buttons">
               <el-button type="primary" @click="editResume">编辑</el-button>
               <el-popconfirm title="确定删除这份简历吗？" @confirm="deleteResume">
                 <el-button slot="reference" type="danger" style="margin-left: 20px;">删除</el-button>
@@ -109,19 +109,13 @@
     <el-dialog title="编辑简历" :visible.sync="dialogFormVisible" width="50%" center>
       <el-form :model="form" :rules="rules" label-width="100px" ref="formRef">
         <el-form-item label="简历照片" prop="resumePhoto">
-          <el-upload 
-            action="http://localhost:8888/api/files/upload" 
-            :show-file-list="false"
-            :before-upload="beforeAvatarUpload"
-            :on-success="res => handleUploadSuccess(res, 'resumePhoto')">
+          <el-upload action="http://localhost:8888/api/files/upload" :show-file-list="false"
+            :before-upload="beforeAvatarUpload" :on-success="res => handleUploadSuccess(res, 'resumePhoto')">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">建议上传1:1比例，大小不超过2MB的图片</div>
           </el-upload>
-          <el-image 
-            v-if="form.resumePhoto" 
-            style="width: 100px; height: 100px; margin-top: 10px; border-radius: 4px"
-            :src="'http://localhost:8888/api/files/' + form.resumePhoto" 
-            fit="cover">
+          <el-image v-if="form.resumePhoto" style="width: 100px; height: 100px; margin-top: 10px; border-radius: 4px"
+            :src="'http://localhost:8888/api/files/' + form.resumePhoto" fit="cover">
           </el-image>
         </el-form-item>
 
@@ -144,11 +138,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="出生日期" prop="birthday">
-              <el-date-picker 
-                v-model="form.birthday" 
-                type="date" 
-                placeholder="选择日期" 
-                value-format="yyyy-MM-dd"
+              <el-date-picker v-model="form.birthday" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
                 style="width: 100%">
               </el-date-picker>
             </el-form-item>
@@ -180,57 +170,33 @@
         </el-row>
 
         <el-form-item label="专业技能" prop="skills">
-          <el-input 
-            type="textarea" 
-            :rows="3" 
-            v-model="form.skills" 
-            placeholder="请描述您的专业技能，如编程语言、工具等"
-            maxlength="500"
+          <el-input type="textarea" :rows="3" v-model="form.skills" placeholder="请描述您的专业技能，如编程语言、工具等" maxlength="500"
             show-word-limit>
           </el-input>
         </el-form-item>
 
         <el-form-item label="工作经历" prop="experience">
-          <el-input 
-            type="textarea" 
-            :rows="4" 
-            v-model="form.experience" 
-            placeholder="请按时间顺序描述您的工作经历"
-            maxlength="1000"
+          <el-input type="textarea" :rows="4" v-model="form.experience" placeholder="请按时间顺序描述您的工作经历" maxlength="1000"
             show-word-limit>
           </el-input>
         </el-form-item>
 
         <el-form-item label="项目经历" prop="projects">
-          <el-input 
-            type="textarea" 
-            :rows="4" 
-            v-model="form.projects" 
-            placeholder="请描述您参与的项目及您的角色和贡献"
-            maxlength="1000"
+          <el-input type="textarea" :rows="4" v-model="form.projects" placeholder="请描述您参与的项目及您的角色和贡献" maxlength="1000"
             show-word-limit>
           </el-input>
         </el-form-item>
 
         <el-form-item label="其他信息" prop="content">
-          <el-input 
-            type="textarea" 
-            :rows="3" 
-            v-model="form.content" 
-            placeholder="可填写自我评价、求职意向等其他信息"
-            maxlength="500"
+          <el-input type="textarea" :rows="3" v-model="form.content" placeholder="可填写自我评价、求职意向等其他信息" maxlength="500"
             show-word-limit>
           </el-input>
         </el-form-item>
 
         <el-form-item label="简历附件" prop="resumeUrl">
-          <el-upload 
-            action="http://localhost:8888/api/files/upload"
-            :on-success="res => handleUploadSuccess(res, 'resumeUrl')" 
-            :before-upload="beforeFileUpload" 
-            :limit="1"
-            :auto-upload="true" 
-            accept=".pdf, .doc, .docx, .txt">
+          <el-upload action="http://localhost:8888/api/files/upload"
+            :on-success="res => handleUploadSuccess(res, 'resumeUrl')" :before-upload="beforeFileUpload" :limit="1"
+            :auto-upload="true" accept=".pdf, .doc, .docx, .txt">
             <el-button type="primary">
               <el-icon>
                 <upload />
@@ -264,6 +230,7 @@ export default {
   name: "ResumeDetail",
   data() {
     return {
+      user: JSON.parse(localStorage.getItem('user')) || {},
       loading: true,
       resume: {},
       dialogFormVisible: false,
@@ -298,12 +265,21 @@ export default {
       try {
         this.loading = true;
         const id = this.$route.query.id;
-        if (!id) {
-          this.$message.error('无效的简历ID');
+        const resumeId = this.$route.query.resumeId;
+
+        if (!id && !resumeId) {
+          this.$message.error('无效的查询 ID');
           return this.$router.push('/resume');
         }
 
-        const res = await request.get(`/resume/${id}`);
+        let requestId;
+        if (id) {
+          requestId = id;
+        } else {
+          requestId = resumeId;
+        }
+
+        const res = await request.get(`/resume/${requestId}`);
         if (res.code === '200') {
           this.resume = res.data;
         } else if (res.code === '404') {
@@ -368,14 +344,14 @@ export default {
     beforeAvatarUpload(file) {
       const isImage = ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type);
       const isLt2M = file.size / 1024 / 1024 < 2;
-      
+
       if (!isImage) {
         this.$message.error('只能上传JPG/PNG格式图片!');
       }
       if (!isLt2M) {
         this.$message.error('图片大小不能超过2MB!');
       }
-      
+
       return isImage && isLt2M;
     },
 
@@ -601,16 +577,16 @@ export default {
   .resume-detail-container {
     padding: 15px;
   }
-  
+
   .resume-section {
     padding: 15px;
   }
-  
+
   .el-row {
     flex-direction: column;
     margin: 0 !important;
   }
-  
+
   .el-col {
     width: 100%;
     padding: 0 !important;

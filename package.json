@@ -13,7 +13,8 @@
     "element-ui": "^2.15.14",
     "pdfjs-dist": "^2.16.105",
     "vue": "^2.6.14",
-    "vue-router": "^3.5.1"
+    "vue-router": "^3.5.1",
+    "wangeditor": "^4.7.15"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

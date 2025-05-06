@@ -113,15 +113,6 @@ const routes = [
       title: '个人中心'
     }
   },
-
-  {
-    path: '/JobOpening',
-    name: '招聘信息界面',
-    component: () => import('../views/JobOpeningView.vue'),
-    meta: {
-      title: '招聘信息界面'
-    }
-  },
   {
     path: '/calendar',
     name: '日历界面',

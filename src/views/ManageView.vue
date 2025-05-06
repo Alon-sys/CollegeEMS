@@ -69,7 +69,7 @@
                 <el-menu-item index="/student">学生信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="6">
+            <el-submenu v-if="user.role !== 'ROLE_COMPANY'" index="6">
               <template slot="title">
                 <i class="el-icon-location"></i><span>简历信息</span>
               </template>

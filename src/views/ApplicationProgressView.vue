@@ -10,14 +10,23 @@
       <el-table :data="tableData" v-loading="loading">
         <el-table-column prop="studentName" label="姓名" width="180"></el-table-column>
         <el-table-column prop="jobTitle" label="岗位名称"></el-table-column>
-        <el-table-column prop="status" label="投递状态"></el-table-column>
-        <el-table-column prop="appliedAt" label="投递时间" :formatter="formatDate"></el-table-column>
+        <el-table-column prop="status" label="投递状态">
+          <template v-slot="{ row }">
+            <el-tag v-if="row.status === '已查看'" type="warning">已查看</el-tag>
+            <el-tag v-else-if="row.status === '已通过'" type="success">未就业</el-tag>
+            <el-tag v-else-if="row.status === '已拒绝'" type="danger">已拒绝</el-tag>
+            <el-tag v-else>已投递</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="appliedAt" label="投递时间" :formatter="formatDate">
+        </el-table-column>
         <el-table-column prop="updatedAt" label="投递更新时间" :formatter="formatDateTime"></el-table-column>
 
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button v-if="user.role !== 'ROLE_STUDENT'" type="primary" @click="edit(scope.row)">编辑</el-button>
-            <el-popconfirm title="确定删除吗？" @confirm="() => deleteJob(scope.row.id)">
+            <el-button v-if="user.role !== 'ROLE_STUDENT'" type="primary" @click="details(scope.row.resumeId)">查看</el-button>
+            <el-popconfirm v-if="user.role === 'ROLE_STUDENT'" title="确定删除吗？" @confirm="() => deleteJob(scope.row.id)">
               <template slot="reference">
                 <el-button type="danger" style="margin-left: 5px;">撤销</el-button>
               </template>
@@ -28,24 +37,19 @@
     </div>
     <!-- 分页 -->
     <div class="block">
-      <el-pagination 
-        @size-change="handleSizeChange" 
-        @current-change="handleCurrentChange"
-        :current-page="params.pageNum" 
-        :page-sizes="[5, 10, 15, 20]" 
-        :page-size="params.pageSize"
-        layout="total, sizes, prev, pager, next, jumper" 
-        :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="params.pageNum" :page-sizes="[5, 10, 15, 20]" :page-size="params.pageSize"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-    
+
     <el-dialog :title="form.id ? '编辑投递状态' : '新增投递'" :visible.sync="dialogFormVisible" width="50%">
       <el-form :model="form" label-width="120px">
         <el-form-item label="投递状态">
           <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
-            <el-option label="已查看" value="VIEWED"></el-option>
-            <el-option label="已拒绝" value="REJECTED"></el-option>
-            <el-option label="已通过" value="ACCEPTED"></el-option>
+            <el-option label="已查看" value="已查看"></el-option>
+            <el-option label="已拒绝" value="已拒绝"></el-option>
+            <el-option label="已通过" value="已通过"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -88,25 +92,41 @@ export default {
     formatDateTime(row, column, cellValue) {
       return cellValue ? dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss') : '-';
     },
-    findBySearch() {
+    async findBySearch() {
       this.loading = true;
-      request.get('/applications/search', {
-        params: this.params
-      }).then(res => {
-        if (res.code === '200') {
-          this.tableData = res.data.list || [];
-          this.total = res.data.total || 0;
-        } else {
-          this.$message.error(res.msg || '获取数据失败');
+      try {
+        let res;
+        if (this.user.role === 'ROLE_ADMIN') {
+          // 学生和管理员使用统一的搜索接口
+          res = await request.get('/applications/search', { params: this.params });
+        } else if (this.user.role === 'ROLE_STUDENT') {
+          res = await request.get('/applications/user/' + this.user.id, {
+            params: this.params
+          });
+        }else if (this.user.role === 'ROLE_COMPANY') {
+          res = await request.get('/applications/company/' + this.user.id, {
+            params: this.params
+          });
         }
-      }).catch(err => {
-        this.$message.error('请求失败');
-      }).finally(() => {
+
+        if (res.code === '200') {
+          // 统一处理数据结构
+          this.tableData = res.data.list || res.data || [];
+          this.total = res.data.total || res.data.length || 0;
+
+          // 调试输出
+          console.log('接口返回数据:', res.data);
+          console.log('表格数据:', this.tableData);
+        }
+      } catch (error) {
+        console.error('获取数据失败:', error);
+        this.$message.error('获取数据失败');
+      } finally {
         this.loading = false;
-      });
+      }
     },
     add() {
-      this.form = { status: 'VIEWED' };
+      this.form = { status: '已投递' };
       this.dialogFormVisible = true;
     },
     edit(row) {
@@ -134,8 +154,8 @@ export default {
         this.$message.warning('请选择投递状态');
         return;
       }
-      
-      const apiUrl = this.form.id ? '/applications/update' : '/applications';
+
+      const apiUrl = this.form.id ? '/applications' : '/applications';
       request.post(apiUrl, this.form).then(res => {
         if (res.code === '200') {
           this.$message.success('操作成功');
@@ -159,7 +179,13 @@ export default {
       }).catch(err => {
         this.$message.error('请求失败');
       });
-    }
+    },
+    details(resumeId) {
+      this.$router.push({
+        path: '/resumeDetail',
+        query: { resumeId },
+      });
+    },
   }
 }
 </script>
