@@ -94,6 +94,7 @@
     <select id="findByUserId" parameterType="java.lang.Long" resultType="com.example.collegeems.entity.Resume">
         SELECT * FROM resumes
         WHERE user_id = #{userId}
+
     </select>
 
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/applications")
 public class ApplicationController {
@@ -55,14 +55,17 @@ public class ApplicationController {
 
     //按用户查询
     @GetMapping("/user/{id}")
-    public Result findByUserId(@PathVariable Long id){
-        return Result.success(applicationService.findByUserId(id));
+    public Result findByUserId(@PathVariable Long id,Params params)
+    {
+        return Result.success(applicationService.findByUserId(id,params));
+
     }
 
 
+    //按公司查询
     @GetMapping("/company/{id}")
-    public Result findByCompanyId(@PathVariable Long id){
-        return Result.success(applicationService.findByCompanyUserId(id));
+    public Result findByCompanyId(@PathVariable Long id,  Params params){
+        return Result.success(applicationService.findByCompanyUserId(id,params));
     }
 
 }

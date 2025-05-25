@@ -29,8 +29,10 @@ public interface ApplicationDao {
                                    @Param("jobId") Long jobId);
 
     // 根据用户ID查询所有申请（新增方法）
-    List<Application> findByUserId(@Param("userId") Long userId);
+    List<Application> findByUserId(@Param("userId") Long userId,
+                                   @Param("params") Params params);
 
     //按公司用户ID查询
-    List<Application> findByCompanyUserId(@Param("companyUserId") Long companyUserId);
+    List<Application> findByCompanyUserId(@Param("companyUserId") Long companyUserId,
+                                          @Param("params") Params params);
 }

@@ -20,5 +20,5 @@ public interface ResumeDao {
 
     List<Resume> findBySearch(@Param("params") Params params);
 
-    List<Resume> findByUserId(Long id);
+    List<Resume> findByUserId(@Param("userId") Long id);
 }

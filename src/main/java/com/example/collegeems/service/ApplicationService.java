@@ -74,11 +74,25 @@ public class ApplicationService {
         return applicationDao.existsByUserIdAndJobId(userId, jobId);
     }
 
-    public List<Application> findByUserId(Long id) {
-        return applicationDao.findByUserId(id);
+
+    public PageInfo<Application> findByUserId(Long id ,Params params) {
+        //开启分页查询
+        //查询会自动查询分页数据
+        PageHelper.startPage(params.getPageNum(),params.getPageSize());
+
+        List<Application> list = applicationDao.findByUserId(id,params);
+
+        return PageInfo.of(list);
     }
 
-    public List<Application> findByCompanyUserId(Long id) {
-        return applicationDao.findByCompanyUserId(id);
+    //按公司查询
+    public PageInfo<Application> findByCompanyUserId(Long id ,Params params) {
+        //开启分页查询
+        //查询会自动查询分页数据
+        PageHelper.startPage(params.getPageNum(),params.getPageSize());
+
+        List<Application> list = applicationDao.findByCompanyUserId(id,params);
+
+        return PageInfo.of(list);
     }
 }

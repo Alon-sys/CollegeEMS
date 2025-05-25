@@ -91,6 +91,7 @@ public class ResumeController {
         }
     }
 
+    // 批量删除
     @PutMapping("/delBatch")
     public Result delBatch(@RequestBody List<Resume> list) {
         for (Resume resume : list) {
@@ -102,7 +103,6 @@ public class ResumeController {
     //根据用户ID查询数据
     @GetMapping("/user/{id}")
     public Result findByUserId(@PathVariable Long id){
-        List<Resume> resume = resumeService.findByUserId(id);
-        return Result.success(resume);
+        return Result.success(resumeService.findByUserId(id));
     }
 }

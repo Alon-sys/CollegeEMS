@@ -55,7 +55,8 @@ public class ResumeService {
         return resumeDao.findById(id);
     }
 
-    public List<Resume> findByUserId(Long id) {
+    public  List<Resume> findByUserId(Long id) {
         return resumeDao.findByUserId(id);
+
     }
 }

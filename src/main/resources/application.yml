@@ -1,5 +1,6 @@
 server:
   port: 8888
+  address: 0.0.0.0
 
 # 数据库配置
 spring:
@@ -12,8 +13,6 @@ spring:
     allow-circular-references: true
   jpa:
     open-in-view: false
-
-
 
 # 配置mybatis实体和xml映射
 mybatis:

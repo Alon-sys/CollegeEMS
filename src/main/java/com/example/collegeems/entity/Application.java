@@ -30,6 +30,8 @@ public class Application {
     private String studentName;
     @Transient
     private String jobTitle;
+    @Transient
+    private String education;
 
     /**
      * 实体创建前的回调方法，在创建用户记录时自动设置创建时间和更新时间为当前时间。

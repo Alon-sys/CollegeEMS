@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  *  文件上传接口
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/files")
 public class FileController {

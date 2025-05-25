@@ -68,8 +68,6 @@ public class AdminService {
         admin.setUpdatedAt(LocalDateTime.now());
 
         adminDao.insertUser(admin);
-
-
     }
 
     //修改用户
@@ -118,6 +116,7 @@ public class AdminService {
             return adminDao.selectUserById(id);
         }
 
+        //修改密码
     public boolean changePassword(Long userId, String oldPassword, String newPassword) {
         // 1. 查询用户
         User user = findById(userId);

@@ -31,16 +31,25 @@
 
     <!-- 条件查询申请 -->
     <select id="findBySearch" resultType="com.example.collegeems.entity.Application">
-        SELECT applications.*, jobs.title as jobTitle,  resumes.name as studentName FROM applications
-        left join Jobs  on applications.job_id = Jobs.id
-        left join resumes on applications.resume_id = resumes.id
+        SELECT
+        applications.*,
+        jobs.title as jobTitle,
+        resumes.name as studentName,
+        resumes.education as education
+        FROM applications
+        LEFT JOIN Jobs ON applications.job_id = Jobs.id
+        LEFT JOIN resumes ON applications.resume_id = resumes.id
+
         <where>
-        <if test="params != null and params.title != null and params.title != ''">
-            and applications.jobTitle like concat('%', #{params.title}, '%')
-        </if>
-        <if test="params != null and params.studentName != null and params.studentName != ''">
-            and applications.studentName like concat('%', #{params.studentName}, '%')
-        </if>
+            <if test="params != null and params.title != null and params.title != ''">
+                AND jobs.title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params != null and params.studentName != null and params.studentName != ''">
+                AND resumes.name LIKE CONCAT('%', #{params.studentName}, '%')
+            </if>
+            <if test="params != null and params.education != null and params.education != ''">
+                AND resumes.education = #{params.education}
+            </if>
         </where>
     </select>
 
@@ -57,25 +66,50 @@
 
     <!-- 根据用户ID查询所有申请 -->
     <select id="findByUserId" resultType="com.example.collegeems.entity.Application">
-        SELECT applications.*, jobs.title as jobTitle,  resumes.name as studentName FROM applications
-        left join Jobs  on applications.job_id = Jobs.id
-        left join resumes on applications.resume_id = resumes.id
-        WHERE applications.user_id = #{userId}
+        SELECT
+        applications.*,
+        jobs.title as jobTitle,
+        resumes.name as studentName,
+        resumes.education as education
+        FROM applications
+        LEFT JOIN Jobs ON applications.job_id = Jobs.id
+        LEFT JOIN resumes ON applications.resume_id = resumes.id
+        <where>
+            applications.user_id = #{userId}
+            <if test="params != null and params.title != null and params.title != ''">
+                AND jobs.title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params != null and params.studentName != null and params.studentName != ''">
+                AND resumes.name LIKE CONCAT('%', #{params.studentName}, '%')
+            </if>
+            <if test="params != null and params.education != null and params.education != ''">
+                AND resumes.education = #{params.education}
+            </if>
+        </where>
     </select>
 
+    <!-- 根据公司用户ID查询所有申请 -->
     <select id="findByCompanyUserId" resultType="com.example.collegeems.entity.Application">
         SELECT
         applications.*,
-        jobs.title AS job_title,
-        resumes.name AS studentName
-        FROM
-        applications
-        LEFT JOIN
-        jobs ON applications.job_id = jobs.id
-        LEFT JOIN
-        resumes ON applications.resume_id = resumes.id
-        WHERE
-        jobs.user_id = #{companyUserId}  <!-- 直接关联 jobs.user_id -->
+        jobs.title as jobTitle,
+        resumes.name as studentName,
+        resumes.education as education
+        FROM applications
+        LEFT JOIN Jobs ON applications.job_id = Jobs.id
+        LEFT JOIN resumes ON applications.resume_id = resumes.id
+        <where>
+            jobs.user_id = #{companyUserId}  <!-- 直接关联 jobs.user_id -->
+            <if test="params != null and params.title != null and params.title != ''">
+                AND jobs.title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params != null and params.studentName != null and params.studentName != ''">
+                AND resumes.name LIKE CONCAT('%', #{params.studentName}, '%')
+            </if>
+            <if test="params != null and params.education != null and params.education != ''">
+                AND resumes.education = #{params.education}
+            </if>
+        </where>
     </select>
 
 </mapper>
