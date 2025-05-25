@@ -14,7 +14,7 @@
             <el-button type="success" @click="viewEditor(scope.row.content)">点击查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间">
+        <el-table-column label="发布时间">
           <template slot-scope="scope">
             {{ formatDateTime(scope.row.time) }}
           </template>

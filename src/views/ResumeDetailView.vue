@@ -62,6 +62,15 @@
             </div>
           </div>
         </div>
+        <!--简历描述-->
+        <div class="resume-section"> 
+          <div class="section-header">
+            <h2>简历描述</h2>
+          </div>
+          <div class="section-content">
+            <pre>{{ resume.content || '暂无信息' }}</pre>
+          </div>
+        </div>
 
         <!-- 专业技能 -->
         <div class="resume-section">
@@ -91,17 +100,7 @@
           <div class="section-content">
             <pre>{{ resume.projects || '暂无信息' }}</pre>
           </div>
-        </div>
-
-        <!-- 其他信息 -->
-        <div class="resume-section">
-          <div class="section-header">
-            <h2>其他信息</h2>
-          </div>
-          <div class="section-content">
-            <pre>{{ resume.content || '暂无信息' }}</pre>
-          </div>
-        </div>
+        </div> 
       </div>
     </el-skeleton>
 
@@ -168,6 +167,12 @@
             </el-form-item>
           </el-col>
         </el-row>
+        
+        <el-form-item label="简历描述" prop="content">
+          <el-input type="textarea" :rows="4" v-model="form.content" placeholder="请描述您的简历内容" maxlength="1000"
+            show-word-limit>
+          </el-input>
+        </el-form-item>
 
         <el-form-item label="专业技能" prop="skills">
           <el-input type="textarea" :rows="3" v-model="form.skills" placeholder="请描述您的专业技能，如编程语言、工具等" maxlength="500"
@@ -183,12 +188,6 @@
 
         <el-form-item label="项目经历" prop="projects">
           <el-input type="textarea" :rows="4" v-model="form.projects" placeholder="请描述您参与的项目及您的角色和贡献" maxlength="1000"
-            show-word-limit>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="其他信息" prop="content">
-          <el-input type="textarea" :rows="3" v-model="form.content" placeholder="可填写自我评价、求职意向等其他信息" maxlength="500"
             show-word-limit>
           </el-input>
         </el-form-item>
@@ -209,7 +208,6 @@
           </el-upload>
           <div v-if="form.resumeUrl" class="file-preview">
             <span>{{ form.resumeUrl.split('/').pop() }}</span>
-            <el-button type="text" @click="handlePreview(form.resumeUrl)" icon="el-icon-view">预览</el-button>
             <el-button type="text" @click="handleDownload(form.resumeUrl)" icon="el-icon-download">下载</el-button>
           </div>
         </el-form-item>

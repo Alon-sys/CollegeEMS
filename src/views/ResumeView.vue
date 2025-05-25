@@ -1,11 +1,7 @@
 <template>
   <div>
     <!-- 搜索区域 -->
-    <div style="margin-bottom: 15px;">
-      <el-input v-model="params.name" style="width: 200px; margin-right: 10px" placeholder="请输入姓名"></el-input>
-      <el-input v-model="params.education" style="width: 200px; margin-right: 10px" placeholder="请输入学历"></el-input>
-      <el-button type="warning" @click="findBySearch()">搜索</el-button>
-      <el-button type="warning" @click="reset()">重置</el-button>
+    <div style="margin-bottom: 15px;margin-left: 15px;">
       <el-button type="primary" @click="add()">新增</el-button>
       <el-popconfirm title="确定删除这些简历吗？" @confirm="delBatch()">
         <el-button slot="reference" type="danger" style="margin-left: 5px">批量删除</el-button>
@@ -27,7 +23,6 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="content" label="简历内容"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="gender" label="性别"></el-table-column>
         <el-table-column prop="birthday" label="出生日期">
@@ -123,9 +118,6 @@
         <el-form-item label="专业" prop="major">
           <el-input v-model="form.major" maxlength="30" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="简历内容" prop="content">
-          <el-input type="textarea" v-model="form.content" rows="4" maxlength="500" show-word-limit></el-input>
-        </el-form-item>
         <el-form-item label="简历附件" prop="resumeUrl">
           <el-upload action="http://localhost:8888/api/files/upload"
             :on-success="res => handleUploadResponse(res, 'resumeUrl')" :before-upload="beforeUpload" :limit="1"
@@ -194,10 +186,8 @@ export default {
       try {
         let res;
         if (this.user.role === 'ROLE_ADMIN') {
-          // 学生和管理员使用统一的搜索接口
           res = await request.get('/resume/search', { params: this.params });
         } else if (this.user.role === 'ROLE_STUDENT') {
-          // 企业接口可能需要单独处理
           res = await request.get('/resume/user/' + this.user.id, {
             params: this.params
           });

@@ -1,7 +1,14 @@
 <template>
   <div>
     <div style="margin-bottom: 15px;">
-      <el-input v-model="params.username" style="width: 200px; margin-right: 10px" placeholder="请输入姓名"></el-input>
+      <el-input v-model="params.studentName" style="width: 200px; margin-right: 10px" placeholder="请输入姓名"></el-input>
+      <el-select v-if="user.role !== 'ROLE_STUDENT'"  v-model="params.education" placeholder="请选择学历筛选" style="width: 200px; margin-right: 10px">
+                <el-option label="高中" value="高中"></el-option>
+                <el-option label="大专" value="大专"></el-option>
+                <el-option label="本科" value="本科"></el-option>
+                <el-option label="硕士" value="硕士"></el-option>
+                <el-option label="博士" value="博士"></el-option>
+      </el-select>
       <el-button type="warning" @click="findBySearch">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
       <el-button v-if="user.role !== 'ROLE_STUDENT'" type="primary" @click="add">新增</el-button>
@@ -9,6 +16,7 @@
     <div>
       <el-table :data="tableData" v-loading="loading">
         <el-table-column prop="studentName" label="姓名" width="180"></el-table-column>
+        <el-table-column prop="education" label="学历"></el-table-column>
         <el-table-column prop="jobTitle" label="岗位名称"></el-table-column>
         <el-table-column prop="status" label="投递状态">
           <template v-slot="{ row }">
@@ -28,7 +36,7 @@
             <el-button v-if="user.role !== 'ROLE_STUDENT'" type="primary" @click="details(scope.row.resumeId)">查看</el-button>
             <el-popconfirm v-if="user.role === 'ROLE_STUDENT'" title="确定删除吗？" @confirm="() => deleteJob(scope.row.id)">
               <template slot="reference">
-                <el-button type="danger" style="margin-left: 5px;">撤销</el-button>
+                <el-button type="danger" style="margin-left: 5px;">删除</el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -46,7 +54,7 @@
     <el-dialog :title="form.id ? '编辑投递状态' : '新增投递'" :visible.sync="dialogFormVisible" width="50%">
       <el-form :model="form" label-width="120px">
         <el-form-item label="投递状态">
-          <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
+          <el-select v-model="form.status" placeholder="请选择状态" style="width: 50%">
             <el-option label="已查看" value="已查看"></el-option>
             <el-option label="已拒绝" value="已拒绝"></el-option>
             <el-option label="已通过" value="已通过"></el-option>
@@ -72,7 +80,8 @@ export default {
       loading: false,
       user: JSON.parse(localStorage.getItem('user')) || {},
       params: {
-        username: '',
+        studentName: '',
+        education: '',
         pageNum: 1,
         pageSize: 5
       },
@@ -97,7 +106,6 @@ export default {
       try {
         let res;
         if (this.user.role === 'ROLE_ADMIN') {
-          // 学生和管理员使用统一的搜索接口
           res = await request.get('/applications/search', { params: this.params });
         } else if (this.user.role === 'ROLE_STUDENT') {
           res = await request.get('/applications/user/' + this.user.id, {
@@ -135,7 +143,8 @@ export default {
     },
     reset() {
       this.params = {
-        username: '',
+        studentName: '',
+        education: '',
         pageNum: 1,
         pageSize: 5,
       };

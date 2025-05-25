@@ -236,7 +236,14 @@ export default {
         // 3. 获取用户简历
         let resumes = [];
         try {
-          const res = await request.get(`/resume/user/${this.user.id}`);
+          const res = await request.get(`/resume/user/${this.user.id}`,
+            {
+              params: {
+                pageNum: 1,
+                pageSize: 10  
+              }
+            }
+          );
 
           // 严格判断响应结构和数据
           if (res?.code !== '200') {
@@ -289,7 +296,7 @@ export default {
               cancelButtonText: '取消',
               inputType: 'select',
               inputOptions: resumes.reduce((options, resume) => {
-                options[resume.id] = resume.title || `简历 ${resume.id}`;
+                options[resume.id] = resume.content || `简历 ${resume.id}`;
                 return options;
               }, {})
             });
